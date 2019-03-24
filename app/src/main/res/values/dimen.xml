@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="margin_one">1dp</dimen>
+    <dimen name="margin_four">4dp</dimen>
+    <dimen name="margin_six">6dp</dimen>
+    <dimen name="margin_ten">10dp</dimen>
+    <dimen name="margin_twelve">12dp</dimen>
+    <dimen name="margin_sixteen">16dp</dimen>
+    <dimen name="margin_twenty_four">24dp</dimen>
+    <dimen name="margin_forty">40dp</dimen>
+
+    <dimen name="text_fourteen">14sp</dimen>
+    <dimen name="text_eighteen">18sp</dimen>
+    <dimen name="text_twenty_two">22sp</dimen>
+
+    <dimen name="character_list_image_item_height">210dp</dimen>
+    <dimen name="favorite_icon_size">30dp</dimen>
+</resources>

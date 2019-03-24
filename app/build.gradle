@@ -1,0 +1,93 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    compileSdkVersion build_versions.target_sdk
+    defaultConfig {
+        applicationId "oliveira.fabio.marvelapp"
+        minSdkVersion build_versions.min_sdk
+        targetSdkVersion build_versions.target_sdk
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        multiDexEnabled = true
+        vectorDrawables.useSupportLibrary = true
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+        test.java.srcDirs += 'src/test/kotlin'
+        androidTest.java.srcDirs += 'src/androidTest/kotlin'
+        main { assets.srcDirs = ['src/main/assets', 'src/androidTest/assets/'] }
+    }
+    androidExtensions {
+        experimental = true
+    }
+    testOptions {
+        execution 'ANDROIDX_TEST_ORCHESTRATOR'
+        animationsDisabled = true
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    // Kotlin
+    implementation deps.kotlin.stdlib
+
+    // Support
+    implementation deps.support.app_compat
+    implementation deps.support.material
+    implementation deps.support.recyclerview
+    implementation deps.support.constraint_layout
+
+    // Lifecycle
+    implementation deps.lifecycle.extensions
+    implementation deps.lifecycle.runtime
+    annotationProcessor deps.lifecycle.compiler
+
+    // Retrofit
+    implementation deps.retrofit.runtime
+    implementation deps.retrofit.gson
+    implementation deps.retrofit.rx
+
+    // OkHttp
+    implementation deps.okhttp_logging_interceptor
+
+    // Rx
+    implementation deps.rx.rxjava2
+    implementation deps.rx.rxandroid
+
+    // Glide
+    implementation deps.glide.core
+    annotationProcessor deps.glide.compiler
+
+    // Koin
+    implementation deps.koin.android
+    implementation deps.koin.lifecycle
+    implementation deps.koin.viewmodel
+
+    // Tests
+    testImplementation deps.junit
+    testImplementation deps.mockserver
+    testImplementation deps.mockito.core
+    testImplementation deps.requestmatcher
+    testImplementation deps.koin.test
+    androidTestUtil deps.espresso.orchestrator
+    androidTestImplementation deps.koin.test
+    androidTestImplementation deps.espresso.runner
+    androidTestImplementation deps.espresso.rules
+    androidTestImplementation deps.espresso.contrib
+    androidTestImplementation deps.espresso.core
+    androidTestImplementation deps.espresso.intent
+    androidTestImplementation deps.requestmatcher
+    androidTestImplementation deps.mockserver
+}
