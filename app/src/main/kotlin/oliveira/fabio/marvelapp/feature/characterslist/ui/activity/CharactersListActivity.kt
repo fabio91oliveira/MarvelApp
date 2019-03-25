@@ -1,5 +1,6 @@
 package oliveira.fabio.marvelapp.feature.characterslist.ui.activity
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -46,7 +47,8 @@ class CharactersListActivity : AppCompatActivity(), CustomSearchViewToolbar.OnSe
     override fun onCharacterClick(character: Character) {
         Intent(this, CharacterDetailsActivity::class.java).apply {
             putExtra(CHARACTER_TAG, character)
-            startActivity(this)
+            putExtra(LIST_OF_FAVORITES_TAG, charactersListViewModel.listOfAllFavorites)
+            startActivityForResult(this, 200)
         }
     }
 
@@ -69,8 +71,18 @@ class CharactersListActivity : AppCompatActivity(), CustomSearchViewToolbar.OnSe
 
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (resultCode == Activity.RESULT_OK && requestCode == 200) {
+            val character = data?.getSerializableExtra(CHARACTER_TAG) as Character
+            charactersAdapter.validateCharacterFavorite(character)
+        }
+    }
+
     override fun onDestroy() {
         super.onDestroy()
+        showInitialLoading()
         charactersListViewModel.onDestroy()
     }
 
@@ -191,6 +203,7 @@ class CharactersListActivity : AppCompatActivity(), CustomSearchViewToolbar.OnSe
 
     companion object {
         const val CHARACTER_TAG = "CHARACTER"
+        const val LIST_OF_FAVORITES_TAG = "LIST_OF_FAVORITES"
     }
 
 }

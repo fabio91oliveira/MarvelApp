@@ -1,5 +1,6 @@
 package oliveira.fabio.marvelapp.feature.characterdetails.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.reactivex.Flowable
@@ -13,6 +14,7 @@ class CharacterDetailsViewModel(private val charactersRepository: CharactersRepo
 
     private val compositeDisposable by lazy { CompositeDisposable() }
     val mutableLiveDataEventsList by lazy { MutableLiveData<Event<Response<HashMap<String, List<EventValueObject>>>>>() }
+    val listOfAllFavorites by lazy { mutableListOf<Character>() }
 
     fun getDatasByCharacterId(characterId: Int) {
         val source1 = charactersRepository.getComics(characterId)
@@ -21,7 +23,6 @@ class CharacterDetailsViewModel(private val charactersRepository: CharactersRepo
         val source4 = charactersRepository.getStories(characterId)
 
         compositeDisposable.add(
-
             Flowable.zip(
                 source1,
                 source2,
@@ -40,6 +41,32 @@ class CharacterDetailsViewModel(private val charactersRepository: CharactersRepo
                 }, {})
         )
 
+    }
+
+    fun addRemoveFavorite(character: Character) {
+        compositeDisposable.add(
+            if (findIdInFavoriteList(character.id)) {
+                charactersRepository.deleteFavorite(character).subscribe({
+                    Log.d("DELETADO", "ta la")
+                    charactersRepository.getAllFavorites().subscribe {
+                        listOfAllFavorites.clear()
+                        listOfAllFavorites.addAll(it)
+                    }
+                }, {
+                    Log.d("foi nao ", "hauha")
+                })
+            } else {
+                charactersRepository.addFavoriteCharacter(character).subscribe({
+                    Log.d("SALVO", "ta la")
+                    charactersRepository.getAllFavorites().subscribe {
+                        listOfAllFavorites.clear()
+                        listOfAllFavorites.addAll(it)
+                    }
+                }, {
+                    Log.d("foi nao ", "hauha")
+                })
+            }
+        )
     }
 
     private fun createListOfEventsToView(it: Four<ComicsResponse, EventsResponse, SeriesResponse, StoriesResponse>): HashMap<String, List<EventValueObject>> {
@@ -91,6 +118,16 @@ class CharacterDetailsViewModel(private val charactersRepository: CharactersRepo
         hash[EventValueObject.STORIES_TAG] = storiesList
 
         return hash
+    }
+
+    private fun findIdInFavoriteList(id: Long): Boolean {
+        listOfAllFavorites.forEach {
+            if (it.id == id) {
+                return true
+            }
+        }
+
+        return false
     }
 
     fun onDestroy() = compositeDisposable.takeIf { it.isDisposed }?.run { dispose() }

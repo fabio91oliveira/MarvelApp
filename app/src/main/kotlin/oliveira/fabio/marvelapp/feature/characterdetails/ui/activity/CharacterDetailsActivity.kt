@@ -1,5 +1,7 @@
 package oliveira.fabio.marvelapp.feature.characterdetails.ui.activity
 
+import android.app.Activity
+import android.content.Intent
 import android.graphics.PorterDuff
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -19,6 +21,7 @@ class CharacterDetailsActivity : AppCompatActivity() {
     private val characterDetailsViewModel: CharacterDetailsViewModel by viewModel()
     private var characterListEventsAdapter: CharacterListEventsAdapter? = null
     private val character by lazy { intent?.extras?.getSerializable(CharactersListActivity.CHARACTER_TAG) as Character }
+    private val listOfAllFavorites by lazy { intent?.extras?.getSerializable(CharactersListActivity.LIST_OF_FAVORITES_TAG) as ArrayList<Character> }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +37,7 @@ class CharacterDetailsActivity : AppCompatActivity() {
     private fun init() {
         setupToolbar()
         setValues()
+        characterDetailsViewModel.listOfAllFavorites.addAll(listOfAllFavorites)
         characterDetailsViewModel.getDatasByCharacterId(character.id.toInt())
         initLiveDatas()
     }
@@ -50,6 +54,14 @@ class CharacterDetailsActivity : AppCompatActivity() {
             txtCharacterResourceURI.text = handleStrings(resourceURI)
             txtCharacterName.text = handleStrings(name)
             txtCharacterDescription.text = handleStrings(description)
+            chkFavorite.isChecked = isFavorite
+            chkFavorite.setOnClickListener {
+                character.isFavorite = !character.isFavorite
+                characterDetailsViewModel.addRemoveFavorite(character)
+                val intent = Intent()
+                intent.putExtra(CharactersListActivity.CHARACTER_TAG, character)
+                setResult(Activity.RESULT_OK, intent)
+            }
             imgCharacter.loadImageByGlide(urlImage)
         }
     }

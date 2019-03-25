@@ -27,6 +27,15 @@ class CharactersAdapter(private val onClickCharacterListener: OnClickCharacterLi
         notifyDataSetChanged()
     }
 
+    fun validateCharacterFavorite(character: Character) {
+        results.forEach {
+            if (it.id == character.id) {
+                it.isFavorite = character.isFavorite
+                notifyDataSetChanged()
+            }
+        }
+    }
+
     fun clearResults() = results.clear()
 
     inner class ItemViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView),

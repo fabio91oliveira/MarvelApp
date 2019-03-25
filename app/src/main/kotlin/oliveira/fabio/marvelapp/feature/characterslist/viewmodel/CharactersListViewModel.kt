@@ -15,7 +15,7 @@ import oliveira.fabio.marvelapp.util.Event
 class CharactersListViewModel(private val charactersRepository: CharactersRepository) : ViewModel() {
 
     private val compositeDisposable by lazy { CompositeDisposable() }
-    private val listOfAllFavorites by lazy { arrayListOf<Character>() }
+    val listOfAllFavorites by lazy { arrayListOf<Character>() }
     val mutableLiveDataResults by lazy { MutableLiveData<Event<Response<List<Character>>>>() }
 
     var lastestData: CharactersResponse.Data? = null
