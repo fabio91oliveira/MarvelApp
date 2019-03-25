@@ -1,5 +1,6 @@
 package oliveira.fabio.marvelapp.feature.characterslist.ui.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -10,23 +11,26 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_characters_list.*
 import oliveira.fabio.marvelapp.R
+import oliveira.fabio.marvelapp.feature.characterdetails.ui.activity.CharacterDetailsActivity
 import oliveira.fabio.marvelapp.feature.characterslist.ui.adapter.CharactersAdapter
 import oliveira.fabio.marvelapp.feature.characterslist.ui.custom.CustomSearchViewToolbar
 import oliveira.fabio.marvelapp.feature.characterslist.ui.listener.InfiniteScrollListener
 import oliveira.fabio.marvelapp.feature.characterslist.viewmodel.CharactersListViewModel
-import oliveira.fabio.marvelapp.model.response.CharactersResponse
+import oliveira.fabio.marvelapp.model.response.Character
 import oliveira.fabio.marvelapp.model.response.Response
 import org.koin.android.viewmodel.ext.android.viewModel
 
 
-class CharactersListActivity : AppCompatActivity(), CustomSearchViewToolbar.OnSearchButtonKeyboardPressed {
-    override fun search(s: String) {
-        // open new actiity
+class CharactersListActivity : AppCompatActivity(), CustomSearchViewToolbar.OnSearchButtonKeyboardPressed,
+    CharactersAdapter.OnClickCharacterListener {
+
+    override fun onLikeButtonClick(character: Character) {
+        charactersListViewModel.addRemoveFavorite(character)
     }
 
     private var firstTime = true
     private val charactersListViewModel: CharactersListViewModel by viewModel()
-    private val charactersAdapter by lazy { CharactersAdapter() }
+    private val charactersAdapter by lazy { CharactersAdapter(this) }
     private val layoutManager by lazy { LinearLayoutManager(applicationContext, RecyclerView.VERTICAL, false) }
     private val infiniteScrollListener by lazy {
         object :
@@ -37,6 +41,17 @@ class CharactersListActivity : AppCompatActivity(), CustomSearchViewToolbar.OnSe
                 charactersListViewModel.getCharactersList()
             }
         }
+    }
+
+    override fun onCharacterClick(character: Character) {
+        Intent(this, CharacterDetailsActivity::class.java).apply {
+            putExtra(CHARACTER_TAG, character)
+            startActivity(this)
+        }
+    }
+
+    override fun search(s: String) {
+        // open new actiity
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,13 +76,7 @@ class CharactersListActivity : AppCompatActivity(), CustomSearchViewToolbar.OnSe
 
     override fun onBackPressed() {
         when (searchViewToolbar.isVisible()) {
-            true -> {
-                searchViewToolbar.closeSearch()
-                if (charactersListViewModel.lastestResults.isNotEmpty()) {
-                    addResults(charactersListViewModel.lastestResults)
-                }
-                startInfiniteScroll()
-            }
+            true -> searchViewToolbar.closeSearch()
             false -> super.onBackPressed()
         }
     }
@@ -86,9 +95,9 @@ class CharactersListActivity : AppCompatActivity(), CustomSearchViewToolbar.OnSe
                 when (response.statusEnum) {
                     Response.StatusEnum.SUCCESS -> {
                         response.data?.run {
-                            when (results.isNotEmpty()) {
+                            when (isNotEmpty()) {
                                 true -> {
-                                    addResults(results)
+                                    addResults(this)
                                     showContent()
                                     if (firstTime.not()) {
                                         showFeedbackToUser(
@@ -119,7 +128,6 @@ class CharactersListActivity : AppCompatActivity(), CustomSearchViewToolbar.OnSe
                             View.OnClickListener {
                                 charactersListViewModel.getCharactersList()
                                 showFeedbackToUser(resources.getString(R.string.characters_list_loading), false)
-                                showInitialLoading()
                             })
                     }
                 }
@@ -144,7 +152,7 @@ class CharactersListActivity : AppCompatActivity(), CustomSearchViewToolbar.OnSe
         charactersListViewModel.offset = offset
     }
 
-    private fun addResults(results: List<CharactersResponse.Data.Result>) = charactersAdapter.addResults(results)
+    private fun addResults(character: List<Character>) = charactersAdapter.addResults(character)
     private fun startInfiniteScroll() = rvCharactersList.addOnScrollListener(infiniteScrollListener)
 
     private fun showFeedbackToUser(message: String, shortTime: Boolean, listener: View.OnClickListener? = null) =
@@ -179,6 +187,10 @@ class CharactersListActivity : AppCompatActivity(), CustomSearchViewToolbar.OnSe
 
     private fun hideInitialLoading() {
         progressBar.visibility = View.GONE
+    }
+
+    companion object {
+        const val CHARACTER_TAG = "CHARACTER"
     }
 
 }

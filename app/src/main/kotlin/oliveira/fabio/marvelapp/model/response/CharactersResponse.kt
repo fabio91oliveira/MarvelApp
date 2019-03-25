@@ -1,5 +1,9 @@
 package oliveira.fabio.marvelapp.model.response
 
+import android.os.Parcelable
+import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
+
 data class CharactersResponse(
     val attributionHTML: String,
     val attributionText: String,
@@ -16,6 +20,7 @@ data class CharactersResponse(
         var results: MutableList<Result>,
         val total: String
     ) {
+        @Parcelize
         data class Result(
             var isFavorite: Boolean = false,
             val comics: Comics,
@@ -24,72 +29,64 @@ data class CharactersResponse(
             val id: String,
             val modified: String,
             val name: String,
-            val resourceURI: String,
+            @SerializedName("resourceURI") val resourceURI: String,
             val series: Series,
             val stories: Stories,
             val thumbnail: Thumbnail,
             val urls: List<Url>
-        ) {
+        ) : Parcelable {
+            fun getId() = id.toInt()
+            @Parcelize
             data class Url(
                 val type: String,
                 val url: String
-            )
+            ) : Parcelable
 
+            @Parcelize
             data class Comics(
                 val available: String,
-                val collectionURI: String,
+                @SerializedName("collectionURI") val collectionURI: String,
                 val items: List<Item>,
                 val returned: String
-            ) {
-                data class Item(
-                    val name: String,
-                    val resourceURI: String
-                )
-            }
+            ) : Parcelable
 
+            @Parcelize
             data class Stories(
                 val available: String,
-                val collectionURI: String,
+                @SerializedName("collectionURI") val collectionURI: String,
                 val items: List<Item>,
                 val returned: String
-            ) {
-                data class Item(
-                    val name: String,
-                    val resourceURI: String,
-                    val type: String
-                )
-            }
+            ) : Parcelable
 
+            @Parcelize
             data class Events(
                 val available: String,
-                val collectionURI: String,
+                @SerializedName("collectionURI") val collectionURI: String,
                 val items: List<Item>,
                 val returned: String
-            ) {
-                data class Item(
-                    val name: String,
-                    val resourceURI: String
-                )
-            }
+            ) : Parcelable
 
+            @Parcelize
             data class Series(
                 val available: String,
-                val collectionURI: String,
+                @SerializedName("collectionURI") val collectionURI: String,
                 val items: List<Item>,
                 val returned: String
-            ) {
-                data class Item(
-                    val name: String,
-                    val resourceURI: String
-                )
-            }
+            ) : Parcelable
 
+            @Parcelize
             data class Thumbnail(
                 val extension: String,
                 val path: String
-            ) {
+            ) : Parcelable {
                 fun getFullImageUrl() = "$path.$extension"
             }
+
+            @Parcelize
+            data class Item(
+                val name: String,
+                @SerializedName("resourceURI") val resourceURI: String
+            ) : Parcelable
         }
     }
 }

@@ -15,4 +15,6 @@
     </plurals>
 
     <string name="characters_list_name_no_results">No Results were found.</string>
+
+    <string name="character_details_comics_title">Comics</string>
 </resources>

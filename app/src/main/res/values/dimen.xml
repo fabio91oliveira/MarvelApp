@@ -9,6 +9,7 @@
     <dimen name="margin_twenty_four">24dp</dimen>
     <dimen name="margin_forty">40dp</dimen>
 
+    <dimen name="text_twelve">12sp</dimen>
     <dimen name="text_fourteen">14sp</dimen>
     <dimen name="text_eighteen">18sp</dimen>
     <dimen name="text_twenty_two">22sp</dimen>

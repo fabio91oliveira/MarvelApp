@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorWhite">
+
+    <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/txtItemTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            tools:text="@tools:sample/lorem"
+            android:layout_marginTop="@dimen/margin_ten"
+            android:layout_marginStart="@dimen/margin_ten"
+            android:layout_marginLeft="@dimen/margin_ten"
+            android:layout_marginEnd="@dimen/margin_ten"
+            android:layout_marginRight="@dimen/margin_ten"
+            android:textColor="@color/colorBlack"
+            android:textSize="@dimen/text_eighteen"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/txtItemDescription"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            tools:text="@tools:sample/lorem"
+            app:layout_constraintTop_toBottomOf="@+id/txtItemTitle"
+            app:layout_constraintStart_toStartOf="@id/txtItemTitle"
+            app:layout_constraintEnd_toEndOf="@id/txtItemTitle"/>
+
+    <View
+            android:id="@+id/viewLine"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/margin_one"
+            android:background="@color/colorSoftGrey"
+            android:layout_marginTop="@dimen/margin_ten"
+            app:layout_constraintTop_toBottomOf="@id/txtItemDescription"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

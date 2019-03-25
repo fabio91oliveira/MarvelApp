@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion build_versions.target_sdk
@@ -53,6 +54,12 @@ dependencies {
     implementation deps.lifecycle.extensions
     implementation deps.lifecycle.runtime
     annotationProcessor deps.lifecycle.compiler
+
+    // Room
+    implementation deps.room.runtime
+    implementation deps.room.rxjava2
+    kapt deps.room.compiler
+    kapt deps.room.compiler
 
     // Retrofit
     implementation deps.retrofit.runtime
