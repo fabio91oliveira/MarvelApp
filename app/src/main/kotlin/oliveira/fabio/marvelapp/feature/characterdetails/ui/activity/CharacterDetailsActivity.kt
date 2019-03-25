@@ -108,7 +108,7 @@ class CharacterDetailsActivity : AppCompatActivity() {
                             if (it.isNotEmpty()) {
                                 characterDetailsAdapter.addItems(it)
                                 hideErrorContent()
-                                showContent()
+                                hideLoadingMoreInfo()
                             } else {
                                 showNoMoreInfoToLoad()
                             }
@@ -116,9 +116,9 @@ class CharacterDetailsActivity : AppCompatActivity() {
                     }
                     Response.StatusEnum.ERROR -> {
                         showErrorContent()
+                        hideLoadingMoreInfo()
                     }
                 }
-                hideLoadingMoreInfo()
             }
         })
     }
@@ -149,9 +149,6 @@ class CharacterDetailsActivity : AppCompatActivity() {
         progressBar.visibility = View.GONE
     }
 
-    private fun showContent() {
-        rvCharacterInfoList.visibility = View.VISIBLE
-    }
 
     private fun handleStrings(message: String) = if (message.isEmpty()) handledMessage else message
 
