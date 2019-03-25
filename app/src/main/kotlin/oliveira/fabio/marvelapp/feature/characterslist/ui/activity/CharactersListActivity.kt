@@ -182,7 +182,7 @@ class CharactersListActivity : AppCompatActivity(), CustomSearchViewToolbar.OnSe
 
         if (charactersListViewModel.lastestResults.isNotEmpty()) {
             addResults(charactersListViewModel.lastestResults)
-//            showContent()
+            showContent()
         }
     }
 
