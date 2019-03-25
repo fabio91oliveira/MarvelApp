@@ -1,4 +1,4 @@
-package oliveira.fabio.marvelapp.model.response
+package oliveira.fabio.marvelapp.model.persistence
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

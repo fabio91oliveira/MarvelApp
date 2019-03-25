@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.item_character.*
 import oliveira.fabio.marvelapp.R
-import oliveira.fabio.marvelapp.model.response.Character
+import oliveira.fabio.marvelapp.model.persistence.Character
 import oliveira.fabio.marvelapp.util.extensions.loadImageByGlide
 
 

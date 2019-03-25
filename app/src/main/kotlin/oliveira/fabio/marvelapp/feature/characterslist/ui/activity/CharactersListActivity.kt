@@ -17,16 +17,14 @@ import kotlinx.android.synthetic.main.activity_characters_list.*
 import oliveira.fabio.marvelapp.R
 import oliveira.fabio.marvelapp.feature.characterdetails.ui.activity.CharacterDetailsActivity
 import oliveira.fabio.marvelapp.feature.characterslist.ui.adapter.CharactersAdapter
-import oliveira.fabio.marvelapp.feature.characterslist.ui.custom.CustomSearchViewToolbar
 import oliveira.fabio.marvelapp.feature.characterslist.ui.listener.InfiniteScrollListener
 import oliveira.fabio.marvelapp.feature.characterslist.viewmodel.CharactersListViewModel
-import oliveira.fabio.marvelapp.model.response.Character
-import oliveira.fabio.marvelapp.model.response.Response
+import oliveira.fabio.marvelapp.model.persistence.Character
+import oliveira.fabio.marvelapp.util.Response
 import org.koin.android.viewmodel.ext.android.viewModel
 
 
-class CharactersListActivity : AppCompatActivity(), CustomSearchViewToolbar.OnSearchButtonKeyboardPressed,
-    CharactersAdapter.OnClickCharacterListener, TextWatcher {
+class CharactersListActivity : AppCompatActivity(), CharactersAdapter.OnClickCharacterListener, TextWatcher {
 
     private var firstTime = true
     private val charactersListViewModel: CharactersListViewModel by viewModel()
@@ -68,10 +66,7 @@ class CharactersListActivity : AppCompatActivity(), CustomSearchViewToolbar.OnSe
             putExtra(LIST_OF_FAVORITES_TAG, charactersListViewModel.listOfAllFavorites)
             startActivityForResult(this, 200)
         }
-    }
-
-    override fun search(s: String) {
-        // open new actiity
+        if (searchViewToolbar.isVisible()) searchViewToolbar.closeSearch()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -87,7 +82,6 @@ class CharactersListActivity : AppCompatActivity(), CustomSearchViewToolbar.OnSe
         } ?: run {
             init()
         }
-
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -222,6 +216,7 @@ class CharactersListActivity : AppCompatActivity(), CustomSearchViewToolbar.OnSe
         hideContent()
         showLoading()
         initRecyclerView()
+        searchViewToolbar.closeSearch()
         infiniteScrollListener.clear()
     }
 

@@ -6,27 +6,38 @@ import android.graphics.PorterDuff
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_character_details.*
 import oliveira.fabio.marvelapp.R
-import oliveira.fabio.marvelapp.feature.characterdetails.ui.adapter.CharacterListEventsAdapter
+import oliveira.fabio.marvelapp.feature.characterdetails.ui.adapter.CharacterDetailsAdapter
 import oliveira.fabio.marvelapp.feature.characterdetails.viewmodel.CharacterDetailsViewModel
 import oliveira.fabio.marvelapp.feature.characterslist.ui.activity.CharactersListActivity
-import oliveira.fabio.marvelapp.model.response.Character
-import oliveira.fabio.marvelapp.model.response.Response
+import oliveira.fabio.marvelapp.model.persistence.Character
+import oliveira.fabio.marvelapp.util.Response
 import oliveira.fabio.marvelapp.util.extensions.loadImageByGlide
 import org.koin.android.viewmodel.ext.android.viewModel
+
 
 class CharacterDetailsActivity : AppCompatActivity() {
 
     private val characterDetailsViewModel: CharacterDetailsViewModel by viewModel()
-    private var characterListEventsAdapter: CharacterListEventsAdapter? = null
+    private val characterDetailsAdapter by lazy { CharacterDetailsAdapter() }
     private val character by lazy { intent?.extras?.getSerializable(CharactersListActivity.CHARACTER_TAG) as Character }
     private val listOfAllFavorites by lazy { intent?.extras?.getSerializable(CharactersListActivity.LIST_OF_FAVORITES_TAG) as ArrayList<Character> }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_character_details)
-        init()
+
+        savedInstanceState?.let {
+            setupToolbar()
+            setValues()
+            initRecyclerView()
+            initLiveDatas()
+        } ?: run {
+            init()
+        }
     }
 
     override fun onDestroy() {
@@ -37,9 +48,19 @@ class CharacterDetailsActivity : AppCompatActivity() {
     private fun init() {
         setupToolbar()
         setValues()
+        initRecyclerView()
         characterDetailsViewModel.listOfAllFavorites.addAll(listOfAllFavorites)
         characterDetailsViewModel.getDatasByCharacterId(character.id.toInt())
         initLiveDatas()
+    }
+
+    private fun initRecyclerView() {
+        rvCharacterInfoList.layoutManager =
+            LinearLayoutManager(applicationContext, RecyclerView.VERTICAL, false)
+        rvCharacterInfoList.adapter = characterDetailsAdapter
+        if (characterDetailsViewModel.lastResultsInfos.isNotEmpty()) {
+            characterDetailsAdapter.addItems(characterDetailsViewModel.lastResultsInfos)
+        }
     }
 
     private fun setupToolbar() {
@@ -72,15 +93,7 @@ class CharacterDetailsActivity : AppCompatActivity() {
                 when (response.statusEnum) {
                     Response.StatusEnum.SUCCESS -> {
                         response.data?.let {
-                            val titleList = ArrayList(it.keys)
-                            characterListEventsAdapter =
-                                CharacterListEventsAdapter(this@CharacterDetailsActivity, titleList, it)
-                            expandableListView.setAdapter(characterListEventsAdapter)
-
-
-                            for (i in 0 until expandableListView.expandableListAdapter.groupCount) {
-                                expandableListView.expandGroup(i)
-                            }
+                            characterDetailsAdapter.addItems(it)
                         }
                     }
                     Response.StatusEnum.ERROR -> {

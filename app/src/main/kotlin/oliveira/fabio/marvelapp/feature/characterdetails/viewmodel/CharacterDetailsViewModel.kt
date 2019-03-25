@@ -6,15 +6,21 @@ import androidx.lifecycle.ViewModel
 import io.reactivex.Flowable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.Function4
+import oliveira.fabio.marvelapp.model.persistence.Character
 import oliveira.fabio.marvelapp.model.repository.CharactersRepository
 import oliveira.fabio.marvelapp.model.response.*
+import oliveira.fabio.marvelapp.model.vo.HeaderItem
+import oliveira.fabio.marvelapp.model.vo.Item
+import oliveira.fabio.marvelapp.model.vo.SubItem
 import oliveira.fabio.marvelapp.util.Event
+import oliveira.fabio.marvelapp.util.Response
 
 class CharacterDetailsViewModel(private val charactersRepository: CharactersRepository) : ViewModel() {
 
     private val compositeDisposable by lazy { CompositeDisposable() }
-    val mutableLiveDataEventsList by lazy { MutableLiveData<Event<Response<HashMap<String, List<EventValueObject>>>>>() }
+    val mutableLiveDataEventsList by lazy { MutableLiveData<Event<Response<MutableList<Item>>>>() }
     val listOfAllFavorites by lazy { mutableListOf<Character>() }
+    val lastResultsInfos by lazy { mutableListOf<Item>() }
 
     fun getDatasByCharacterId(characterId: Int) {
         val source1 = charactersRepository.getComics(characterId)
@@ -35,8 +41,10 @@ class CharacterDetailsViewModel(private val charactersRepository: CharactersRepo
                         t3,
                         t4
                     )
-                }).map { createListOfEventsToView(it) }
+                }).map { parseToItem(it) }
                 .subscribe({
+                    lastResultsInfos.clear()
+                    lastResultsInfos.addAll(it)
                     mutableLiveDataEventsList.value = Event(Response.success(it))
                 }, {})
         )
@@ -69,56 +77,65 @@ class CharacterDetailsViewModel(private val charactersRepository: CharactersRepo
         )
     }
 
-    private fun createListOfEventsToView(it: Four<ComicsResponse, EventsResponse, SeriesResponse, StoriesResponse>): HashMap<String, List<EventValueObject>> {
-        val hash by lazy { hashMapOf<String, List<EventValueObject>>() }
-        val comicsList by lazy { mutableListOf<EventValueObject>() }
-        val eventsList by lazy { mutableListOf<EventValueObject>() }
-        val seriesList by lazy { mutableListOf<EventValueObject>() }
-        val storiesList by lazy { mutableListOf<EventValueObject>() }
+    private fun parseToItem(it: Four<ComicsResponse, EventsResponse, SeriesResponse, StoriesResponse>): MutableList<Item> {
+        val list = mutableListOf<Item>()
 
-        it.first.data?.results?.forEachIndexed { index, list ->
-            if (index + 1 <= MAX_ITEMS_PER_LIST) {
-                val event = EventValueObject("", "")
-                list?.title.let { event.title = it }
-                list?.description?.let { event.description = it }
-                comicsList.add(event)
+        val comics = it.first
+        val events = it.second
+        val series = it.third
+        val stories = it.fourth
+
+        val comicsHeaderItem = HeaderItem(COMICS_TAG)
+        list.add(comicsHeaderItem)
+        comics.data?.results?.forEachIndexed { i, item ->
+            if (i + 1 <= MAX_ITEMS_PER_LIST) {
+                item?.title?.run {
+                    item.description?.let {
+                        list.add(SubItem(this, it))
+                    }
+                }
             }
         }
 
-        it.second.data?.results?.forEachIndexed { index, list ->
-            if (index + 1 <= MAX_ITEMS_PER_LIST) {
-                val event = EventValueObject("", "")
-                list?.title.let { event.title = it }
-                list?.description?.let { event.description = it }
-                eventsList.add(event)
+        val eventsHeaderItem = HeaderItem(EVENTS_TAG)
+        list.add(eventsHeaderItem)
+        events.data?.results?.forEachIndexed { i, item ->
+            if (i + 1 <= MAX_ITEMS_PER_LIST) {
+                item?.title?.run {
+                    item.description?.let {
+                        list.add(SubItem(this, it))
+                    }
+                }
             }
         }
 
-        it.third.data?.results?.forEachIndexed { index, list ->
-            if (index + 1 <= MAX_ITEMS_PER_LIST) {
-                val event = EventValueObject("", "")
-                list?.title.let { event.title = it }
-                list?.description?.let { event.description = it }
-                seriesList.add(event)
+        val seriesHeaderItem = HeaderItem(STORIES_TAG)
+        list.add(seriesHeaderItem)
+        series.data?.results?.forEachIndexed { i, item ->
+            if (i + 1 <= MAX_ITEMS_PER_LIST) {
+                item?.title?.run {
+                    item.description?.let {
+                        list.add(SubItem(this, it))
+                    }
+                }
             }
         }
 
-        it.fourth.data?.results?.forEachIndexed { index, list ->
-            if (index + 1 <= MAX_ITEMS_PER_LIST) {
-                val event = EventValueObject("", "")
-                list?.title.let { event.title = it }
-                list?.description?.let { event.description = it }
-                storiesList.add(event)
+        val storiesHeaderItem = HeaderItem(SERIES_TAG)
+        list.add(storiesHeaderItem)
+        stories.data?.results?.forEachIndexed { i, item ->
+            if (i + 1 <= MAX_ITEMS_PER_LIST) {
+                item?.title?.run {
+                    item.description?.let {
+                        list.add(SubItem(this, it))
+                    }
+                }
             }
         }
 
-        hash[EventValueObject.COMICS_TAG] = comicsList
-        hash[EventValueObject.EVENTS_TAG] = eventsList
-        hash[EventValueObject.SERIES_TAG] = seriesList
-        hash[EventValueObject.STORIES_TAG] = storiesList
-
-        return hash
+        return list
     }
+
 
     private fun findIdInFavoriteList(id: Long): Boolean {
         listOfAllFavorites.forEach {
@@ -134,6 +151,10 @@ class CharacterDetailsViewModel(private val charactersRepository: CharactersRepo
 
     companion object {
         private const val MAX_ITEMS_PER_LIST = 3
+        private const val COMICS_TAG = "Comics"
+        private const val EVENTS_TAG = "Events"
+        private const val STORIES_TAG = "Stories"
+        private const val SERIES_TAG = "Series"
     }
 
 }

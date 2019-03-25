@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import io.reactivex.disposables.CompositeDisposable
 import oliveira.fabio.marvelapp.model.repository.CharactersRepository
 import oliveira.fabio.marvelapp.model.response.ComicsResponse
-import oliveira.fabio.marvelapp.model.response.Response
+import oliveira.fabio.marvelapp.util.Response
 import oliveira.fabio.marvelapp.util.Event
 
 class CharacterDetailsViewModel_old(private val charactersRepository: CharactersRepository) : ViewModel() {

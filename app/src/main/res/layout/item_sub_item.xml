@@ -8,7 +8,7 @@
         android:background="@color/colorWhite">
 
     <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/txtItemTitle"
+            android:id="@+id/txtSubItemTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             tools:text="@tools:sample/lorem"
@@ -24,13 +24,13 @@
             app:layout_constraintEnd_toEndOf="parent"/>
 
     <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/txtItemDescription"
+            android:id="@+id/txtSubItemDescription"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             tools:text="@tools:sample/lorem"
-            app:layout_constraintTop_toBottomOf="@+id/txtItemTitle"
-            app:layout_constraintStart_toStartOf="@id/txtItemTitle"
-            app:layout_constraintEnd_toEndOf="@id/txtItemTitle"/>
+            app:layout_constraintTop_toBottomOf="@+id/txtSubItemTitle"
+            app:layout_constraintStart_toStartOf="@id/txtSubItemTitle"
+            app:layout_constraintEnd_toEndOf="@id/txtSubItemTitle"/>
 
     <View
             android:id="@+id/viewLine"
@@ -38,7 +38,7 @@
             android:layout_height="@dimen/margin_one"
             android:background="@color/colorSoftGrey"
             android:layout_marginTop="@dimen/margin_ten"
-            app:layout_constraintTop_toBottomOf="@id/txtItemDescription"
+            app:layout_constraintTop_toBottomOf="@id/txtSubItemDescription"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
 

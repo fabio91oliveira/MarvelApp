@@ -29,7 +29,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/toolbar"
-            android:background="@color/colorSoftGrey" android:layout_marginTop="24dp"
+            android:background="@color/colorSoftGrey"
             tools:layout_editor_absoluteX="0dp">
 
         <androidx.appcompat.widget.AppCompatImageView
@@ -111,13 +111,14 @@
                 android:textColor="@color/colorWhite"
                 tools:text="@tools:sample/lorem"/>
 
-        <ExpandableListView
-                android:id="@+id/expandableListView"
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvCharacterInfoList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:listitem="@layout/item_list"
                 app:layout_constraintTop_toBottomOf="@+id/txtCharacterDescription"
-                android:dividerHeight="0.5dp" tools:layout_editor_absoluteX="0dp"/>
+                android:divider="@android:color/transparent"
+                tools:listitem="@layout/item_character"
+                android:visibility="visible"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

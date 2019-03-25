@@ -26,7 +26,6 @@ class CustomSearchViewToolbar(
 ) : ConstraintLayout(context, attrs) {
 
     private var isVisible = false
-    private var onSearchButtonKeyboardPressed: OnSearchButtonKeyboardPressed? = null
 
     override fun onSaveInstanceState(): Parcelable? {
         return Bundle().apply {
@@ -61,7 +60,6 @@ class CustomSearchViewToolbar(
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     v?.hideKeyboard()
                     container.requestFocus()
-                    onSearchButtonKeyboardPressed?.search(v?.text.toString())
                     return true
                 }
                 return false
@@ -127,8 +125,4 @@ class CustomSearchViewToolbar(
     fun setTextWatcherListener(textWatcher: TextWatcher) = searchEditText.addTextChangedListener(textWatcher)
 
     fun isVisible() = isVisible
-
-    interface OnSearchButtonKeyboardPressed {
-        fun search(s: String)
-    }
 }

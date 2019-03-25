@@ -3,8 +3,8 @@ package oliveira.fabio.marvelapp.model.repository
 import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import oliveira.fabio.marvelapp.model.persistence.Character
 import oliveira.fabio.marvelapp.model.persistence.CharacterDao
-import oliveira.fabio.marvelapp.model.response.Character
 import oliveira.fabio.marvelapp.model.response.CharactersResponse
 import oliveira.fabio.marvelapp.network.api.MarvelApi
 

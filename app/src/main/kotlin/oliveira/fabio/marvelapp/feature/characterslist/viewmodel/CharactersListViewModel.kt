@@ -7,9 +7,9 @@ import io.reactivex.Flowable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.BiFunction
 import oliveira.fabio.marvelapp.model.repository.CharactersRepository
-import oliveira.fabio.marvelapp.model.response.Character
+import oliveira.fabio.marvelapp.model.persistence.Character
 import oliveira.fabio.marvelapp.model.response.CharactersResponse
-import oliveira.fabio.marvelapp.model.response.Response
+import oliveira.fabio.marvelapp.util.Response
 import oliveira.fabio.marvelapp.util.Event
 
 class CharactersListViewModel(private val charactersRepository: CharactersRepository) : ViewModel() {
