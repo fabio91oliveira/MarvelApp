@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
+import android.text.TextWatcher
 import android.util.AttributeSet
 import android.view.KeyEvent
 import android.view.LayoutInflater
@@ -115,9 +116,15 @@ class CustomSearchViewToolbar(
         }
     }
 
-    fun setListener(onSearchButtonKeyboardPressed: OnSearchButtonKeyboardPressed) {
-        this.onSearchButtonKeyboardPressed = onSearchButtonKeyboardPressed
+    fun loading(isLoading: Boolean) {
+        if (isLoading && !searchEditText.text.toString().isEmpty()) {
+            searchProgressBar.animate().setDuration(200).alpha(1f).start()
+        } else {
+            searchProgressBar.animate().setDuration(200).alpha(0f).start()
+        }
     }
+
+    fun setTextWatcherListener(textWatcher: TextWatcher) = searchEditText.addTextChangedListener(textWatcher)
 
     fun isVisible() = isVisible
 

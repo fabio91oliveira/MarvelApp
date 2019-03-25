@@ -18,19 +18,21 @@ class CharactersListViewModel(private val charactersRepository: CharactersReposi
     val listOfAllFavorites by lazy { arrayListOf<Character>() }
     val mutableLiveDataResults by lazy { MutableLiveData<Event<Response<List<Character>>>>() }
 
+    var isQuerySearch: Boolean = false
+
     var lastestData: CharactersResponse.Data? = null
 
     val lastestResults by lazy { mutableListOf<Character>() }
 
     var offset = 0
 
-    fun getCharactersList() {
+    fun getCharactersList(name: String? = null) {
         val source1 = charactersRepository.getAllFavorites()
 //            .subscribe {
 //                listOfAllFavorites.addAll(it)
 //            }
 
-        val source2 = charactersRepository.getCharacters(LIMIT_PER_PAGE, offset)
+        val source2 = charactersRepository.getCharacters(LIMIT_PER_PAGE, offset, name)
 //            .map {
 //                parseToCharacterList(it.data)
 //            }
@@ -55,7 +57,6 @@ class CharactersListViewModel(private val charactersRepository: CharactersReposi
                 listOfAllFavorites.clear()
                 listOfAllFavorites.addAll(it.first)
                 validateFavoriteCharacters(it.second)
-                lastestResults.addAll(it.second)
                 mutableLiveDataResults.value = Event(Response.success(it.second))
             }
         )

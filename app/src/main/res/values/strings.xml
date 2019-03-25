@@ -17,4 +17,7 @@
     <string name="characters_list_name_no_results">No Results were found.</string>
 
     <string name="character_details_comics_title">Comics</string>
+
+    <string name="characters_list_regular_list">Regular List</string>
+    <string name="characters_list_favorite_list">Favorite List</string>
 </resources>

@@ -38,6 +38,17 @@
                 app:layout_constraintStart_toStartOf="parent"
                 android:background="?attr/homeAsUpIndicator"/>
 
+        <ProgressBar
+                android:id="@+id/searchProgressBar"
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="@dimen/margin_twenty_four"
+                android:layout_height="@dimen/margin_twenty_four"
+                android:layout_marginRight="@dimen/margin_sixteen"
+                android:layout_marginEnd="@dimen/margin_sixteen"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
         <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/searchEditText"
                 android:layout_width="0dp"

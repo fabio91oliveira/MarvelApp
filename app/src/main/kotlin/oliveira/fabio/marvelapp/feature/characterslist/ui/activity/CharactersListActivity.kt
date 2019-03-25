@@ -3,7 +3,10 @@ package oliveira.fabio.marvelapp.feature.characterslist.ui.activity
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
@@ -23,11 +26,7 @@ import org.koin.android.viewmodel.ext.android.viewModel
 
 
 class CharactersListActivity : AppCompatActivity(), CustomSearchViewToolbar.OnSearchButtonKeyboardPressed,
-    CharactersAdapter.OnClickCharacterListener {
-
-    override fun onLikeButtonClick(character: Character) {
-        charactersListViewModel.addRemoveFavorite(character)
-    }
+    CharactersAdapter.OnClickCharacterListener, TextWatcher {
 
     private var firstTime = true
     private val charactersListViewModel: CharactersListViewModel by viewModel()
@@ -37,11 +36,30 @@ class CharactersListActivity : AppCompatActivity(), CustomSearchViewToolbar.OnSe
         object :
             InfiniteScrollListener(layoutManager, charactersListViewModel.offset) {
             override fun onLoadMore(totalLatestResult: Int) {
-                showFeedbackToUser(resources.getString(R.string.characters_list_loading), false)
-                setLatestTotalResult(totalLatestResult)
-                charactersListViewModel.getCharactersList()
+                if (!charactersListViewModel.isQuerySearch) {
+                    showFeedbackToUser(resources.getString(R.string.characters_list_loading), false)
+                    setLatestTotalResult(totalLatestResult)
+                    charactersListViewModel.getCharactersList()
+                }
             }
         }
+    }
+
+    override fun afterTextChanged(s: Editable?) {}
+
+    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+    override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+        if (s.isNotEmpty()) {
+            unselectTabs()
+            charactersListViewModel.isQuerySearch = true
+            charactersListViewModel.getCharactersList(s.toString())
+            searchViewToolbar.loading(true)
+        }
+    }
+
+    override fun onLikeButtonClick(character: Character) {
+        charactersListViewModel.addRemoveFavorite(character)
     }
 
     override fun onCharacterClick(character: Character) {
@@ -61,14 +79,20 @@ class CharactersListActivity : AppCompatActivity(), CustomSearchViewToolbar.OnSe
         setContentView(R.layout.activity_characters_list)
 
         savedInstanceState?.let {
-            initCustomSearchViewToolbar()
+            if (savedInstanceState.getInt(CURRENT_TAB) != null) tabLayout.getTabAt(savedInstanceState.getInt(CURRENT_TAB))?.select()
+            setupTabLayout()
             initLiveDatas()
             initRecyclerView()
-            showContent()
+            initSearchViewListener()
         } ?: run {
             init()
         }
 
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(CURRENT_TAB, tabLayout.selectedTabPosition)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -94,10 +118,12 @@ class CharactersListActivity : AppCompatActivity(), CustomSearchViewToolbar.OnSe
     }
 
     private fun init() {
+        hideContent()
         showInitialLoading()
-        initCustomSearchViewToolbar()
+        setupTabLayout()
         initLiveDatas()
         initRecyclerView()
+        initSearchViewListener()
         charactersListViewModel.getCharactersList()
     }
 
@@ -109,6 +135,8 @@ class CharactersListActivity : AppCompatActivity(), CustomSearchViewToolbar.OnSe
                         response.data?.run {
                             when (isNotEmpty()) {
                                 true -> {
+                                    if (charactersListViewModel.isQuerySearch) clearList()
+                                    charactersListViewModel.lastestResults.addAll(this)
                                     addResults(this)
                                     showContent()
                                     if (firstTime.not()) {
@@ -119,15 +147,15 @@ class CharactersListActivity : AppCompatActivity(), CustomSearchViewToolbar.OnSe
                                     }
                                 }
                                 else -> {
-                                    if (firstTime.not()) {
-                                        showFeedbackToUser(
-                                            resources.getString(R.string.characters_list_no_more_results),
-                                            true
-                                        )
-                                    }
+                                    hideContent()
+                                    showFeedbackToUser(
+                                        resources.getString(R.string.characters_list_no_more_results),
+                                        true
+                                    )
                                 }
                             }
                             if (firstTime) firstTime = false
+                            searchViewToolbar.loading(false)
                             hideInitialLoading()
 
                         }
@@ -154,11 +182,44 @@ class CharactersListActivity : AppCompatActivity(), CustomSearchViewToolbar.OnSe
 
         if (charactersListViewModel.lastestResults.isNotEmpty()) {
             addResults(charactersListViewModel.lastestResults)
-            showContent()
+//            showContent()
         }
     }
 
-    private fun initCustomSearchViewToolbar() = searchViewToolbar.setListener(this)
+    private fun clearList() {
+        charactersListViewModel.lastestResults
+        charactersListViewModel.offset = 0
+        charactersAdapter.clearResults()
+        charactersAdapter.notifyDataSetChanged()
+    }
+
+    private fun setupTabLayout() {
+        for (i in 0 until tabLayout.tabCount) {
+            val tab = (tabLayout.getChildAt(0) as ViewGroup).getChildAt(i)
+            tab.requestLayout()
+            tab.setOnClickListener {
+                when (tab.contentDescription) {
+                    resources.getString(R.string.characters_list_regular_list) -> {
+                        // TODO
+                    }
+                    resources.getString(R.string.characters_list_favorite_list) -> {
+                        // TODO
+                    }
+                }
+                tab.isSelected = true
+                changeTabLayoutSelectedTabColor(R.color.colorAccent)
+                charactersListViewModel.isQuerySearch = false
+                charactersListViewModel.offset = 0
+                clearList()
+                hideContent()
+                showInitialLoading()
+                initRecyclerView()
+                charactersListViewModel.getCharactersList()
+            }
+        }
+    }
+
+    private fun initSearchViewListener() = searchViewToolbar.setTextWatcherListener(this)
 
     private fun setLatestTotalResult(offset: Int) {
         charactersListViewModel.offset = offset
@@ -201,9 +262,21 @@ class CharactersListActivity : AppCompatActivity(), CustomSearchViewToolbar.OnSe
         progressBar.visibility = View.GONE
     }
 
+    private fun unselectTabs() {
+        changeTabLayoutSelectedTabColor(R.color.colorPrimary)
+        for (i in 0 until tabLayout.tabCount) {
+            val tab = (tabLayout.getChildAt(0) as ViewGroup).getChildAt(i)
+            tab.isSelected = false
+        }
+    }
+
+    private fun changeTabLayoutSelectedTabColor(color: Int) =
+        tabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(this, color))
+
     companion object {
         const val CHARACTER_TAG = "CHARACTER"
         const val LIST_OF_FAVORITES_TAG = "LIST_OF_FAVORITES"
+        private const val CURRENT_TAB = "CURRENT_TAB"
     }
 
 }
