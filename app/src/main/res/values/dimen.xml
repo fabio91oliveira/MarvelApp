@@ -16,4 +16,6 @@
 
     <dimen name="character_list_image_item_height">210dp</dimen>
     <dimen name="favorite_icon_size">30dp</dimen>
+
+    <dimen name="app_bar_height">192dp</dimen>
 </resources>

@@ -2,8 +2,10 @@ package oliveira.fabio.marvelapp.feature.characterdetails.ui.activity
 
 import android.app.Activity
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.graphics.PorterDuff
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -29,6 +31,7 @@ class CharacterDetailsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_character_details)
+        overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_down)
 
         savedInstanceState?.let {
             setupToolbar()
@@ -50,8 +53,10 @@ class CharacterDetailsActivity : AppCompatActivity() {
         setValues()
         initRecyclerView()
         characterDetailsViewModel.listOfAllFavorites.addAll(listOfAllFavorites)
-        characterDetailsViewModel.getDatasByCharacterId(character.id.toInt())
+        getCharacterMoreInfo()
         initLiveDatas()
+        getCharacterMoreInfo()
+        showLoadingMoreInfo()
     }
 
     private fun initRecyclerView() {
@@ -75,9 +80,16 @@ class CharacterDetailsActivity : AppCompatActivity() {
             txtCharacterResourceURI.text = handleStrings(resourceURI)
             txtCharacterName.text = handleStrings(name)
             txtCharacterDescription.text = handleStrings(description)
-            chkFavorite.isChecked = isFavorite
+            chkFavorite.backgroundTintList =
+                if (isFavorite) ColorStateList.valueOf(resources.getColor(R.color.colorHeart)) else ColorStateList.valueOf(
+                    resources.getColor(R.color.colorBlack)
+                )
             chkFavorite.setOnClickListener {
                 character.isFavorite = !character.isFavorite
+                chkFavorite.backgroundTintList =
+                    if (character.isFavorite) ColorStateList.valueOf(resources.getColor(R.color.colorHeart)) else ColorStateList.valueOf(
+                        resources.getColor(R.color.colorBlack)
+                    )
                 characterDetailsViewModel.addRemoveFavorite(character)
                 val intent = Intent()
                 intent.putExtra(CharactersListActivity.CHARACTER_TAG, character)
@@ -93,15 +105,52 @@ class CharacterDetailsActivity : AppCompatActivity() {
                 when (response.statusEnum) {
                     Response.StatusEnum.SUCCESS -> {
                         response.data?.let {
-                            characterDetailsAdapter.addItems(it)
+                            if (it.isNotEmpty()) {
+                                characterDetailsAdapter.addItems(it)
+                                hideErrorContent()
+                                showContent()
+                            } else {
+                                showNoMoreInfoToLoad()
+                            }
                         }
                     }
                     Response.StatusEnum.ERROR -> {
-
+                        showErrorContent()
                     }
                 }
+                hideLoadingMoreInfo()
             }
         })
+    }
+
+    private fun getCharacterMoreInfo() = characterDetailsViewModel.getDatasByCharacterId(character.id.toInt())
+
+    private fun showNoMoreInfoToLoad() {
+
+    }
+
+    private fun hideNoMoreInfoToLoad() {
+
+    }
+
+    private fun showErrorContent() {
+
+    }
+
+    private fun hideErrorContent() {
+
+    }
+
+    private fun showLoadingMoreInfo() {
+        progressBar.visibility = View.VISIBLE
+    }
+
+    private fun hideLoadingMoreInfo() {
+        progressBar.visibility = View.GONE
+    }
+
+    private fun showContent() {
+        rvCharacterInfoList.visibility = View.VISIBLE
     }
 
     private fun handleStrings(message: String) = if (message.isEmpty()) handledMessage else message

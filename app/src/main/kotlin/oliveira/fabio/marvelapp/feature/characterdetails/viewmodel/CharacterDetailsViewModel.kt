@@ -85,49 +85,73 @@ class CharacterDetailsViewModel(private val charactersRepository: CharactersRepo
         val series = it.third
         val stories = it.fourth
 
-        val comicsHeaderItem = HeaderItem(COMICS_TAG)
-        list.add(comicsHeaderItem)
-        comics.data?.results?.forEachIndexed { i, item ->
-            if (i + 1 <= MAX_ITEMS_PER_LIST) {
-                item?.title?.run {
-                    item.description?.let {
-                        list.add(SubItem(this, it))
+        comics.data?.let {
+            it.count?.run { if (toInt() > MIN_ITEMS) list.add(HeaderItem(COMICS_TAG)) }
+            it.results?.forEachIndexed { i, item ->
+                if (i + 1 <= MAX_ITEMS_PER_LIST) {
+                    item?.title?.run {
+                        item.description?.let { description ->
+                            list.add(
+                                SubItem(
+                                    handleEmptyText(this, NO_TITLE_FROM_API),
+                                    handleEmptyText(description, NO_DESCRIPTION_FROM_API)
+                                )
+                            )
+                        }
                     }
                 }
             }
         }
 
-        val eventsHeaderItem = HeaderItem(EVENTS_TAG)
-        list.add(eventsHeaderItem)
-        events.data?.results?.forEachIndexed { i, item ->
-            if (i + 1 <= MAX_ITEMS_PER_LIST) {
-                item?.title?.run {
-                    item.description?.let {
-                        list.add(SubItem(this, it))
+        events.data?.let {
+            it.count?.run { if (toInt() > MIN_ITEMS) list.add(HeaderItem(EVENTS_TAG)) }
+            it.results?.forEachIndexed { i, item ->
+                if (i + 1 <= MAX_ITEMS_PER_LIST) {
+                    item?.title?.run {
+                        item.description?.let { description ->
+                            list.add(
+                                SubItem(
+                                    handleEmptyText(this, NO_TITLE_FROM_API),
+                                    handleEmptyText(description, NO_DESCRIPTION_FROM_API)
+                                )
+                            )
+                        }
                     }
                 }
             }
         }
 
-        val seriesHeaderItem = HeaderItem(STORIES_TAG)
-        list.add(seriesHeaderItem)
-        series.data?.results?.forEachIndexed { i, item ->
-            if (i + 1 <= MAX_ITEMS_PER_LIST) {
-                item?.title?.run {
-                    item.description?.let {
-                        list.add(SubItem(this, it))
+        series.data?.let {
+            it.count?.run { if (toInt() > MIN_ITEMS) list.add(HeaderItem(STORIES_TAG)) }
+            it.results?.forEachIndexed { i, item ->
+                if (i + 1 <= MAX_ITEMS_PER_LIST) {
+                    item?.title?.run {
+                        item.description?.let { description ->
+                            list.add(
+                                SubItem(
+                                    handleEmptyText(this, NO_TITLE_FROM_API),
+                                    handleEmptyText(description, NO_DESCRIPTION_FROM_API)
+                                )
+                            )
+                        }
                     }
                 }
             }
         }
 
-        val storiesHeaderItem = HeaderItem(SERIES_TAG)
-        list.add(storiesHeaderItem)
-        stories.data?.results?.forEachIndexed { i, item ->
-            if (i + 1 <= MAX_ITEMS_PER_LIST) {
-                item?.title?.run {
-                    item.description?.let {
-                        list.add(SubItem(this, it))
+        stories.data?.let {
+            it.count?.run { if (toInt() > MIN_ITEMS) list.add(HeaderItem(SERIES_TAG)) }
+            it.results?.forEachIndexed { i, item ->
+                if (i + 1 <= MAX_ITEMS_PER_LIST) {
+                    item?.title?.run {
+                        item.description?.let { description ->
+                            list.add(
+                                SubItem(
+                                    handleEmptyText(this, NO_TITLE_FROM_API),
+                                    handleEmptyText(description, NO_DESCRIPTION_FROM_API)
+                                )
+                            )
+                        }
                     }
                 }
             }
@@ -136,6 +160,7 @@ class CharacterDetailsViewModel(private val charactersRepository: CharactersRepo
         return list
     }
 
+    private fun handleEmptyText(string: String, message: String) = if (string.isEmpty()) message else string
 
     private fun findIdInFavoriteList(id: Long): Boolean {
         listOfAllFavorites.forEach {
@@ -150,11 +175,14 @@ class CharacterDetailsViewModel(private val charactersRepository: CharactersRepo
     fun onDestroy() = compositeDisposable.takeIf { it.isDisposed }?.run { dispose() }
 
     companion object {
+        private const val MIN_ITEMS = 1
         private const val MAX_ITEMS_PER_LIST = 3
         private const val COMICS_TAG = "Comics"
         private const val EVENTS_TAG = "Events"
         private const val STORIES_TAG = "Stories"
         private const val SERIES_TAG = "Series"
+        private const val NO_TITLE_FROM_API = "There is no title from de API."
+        private const val NO_DESCRIPTION_FROM_API = "There is no description from de API."
     }
 
 }

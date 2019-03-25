@@ -64,7 +64,8 @@ class CharactersListActivity : AppCompatActivity(), CharactersAdapter.OnClickCha
         Intent(this, CharacterDetailsActivity::class.java).apply {
             putExtra(CHARACTER_TAG, character)
             putExtra(LIST_OF_FAVORITES_TAG, charactersListViewModel.listOfAllFavorites)
-            startActivityForResult(this, 200)
+            startActivityForResult(this, REQUEST_CODE_UPDATE_FAVORITE)
+            overridePendingTransition(R.anim.slide_out_down, R.anim.slide_in_up)
         }
         if (searchViewToolbar.isVisible()) searchViewToolbar.closeSearch()
     }
@@ -92,7 +93,7 @@ class CharactersListActivity : AppCompatActivity(), CharactersAdapter.OnClickCha
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (resultCode == Activity.RESULT_OK && requestCode == 200) {
+        if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE_UPDATE_FAVORITE) {
             val character = data?.getSerializableExtra(CHARACTER_TAG) as Character
             charactersAdapter.validateCharacterFavorite(character)
         }
@@ -278,6 +279,7 @@ class CharactersListActivity : AppCompatActivity(), CharactersAdapter.OnClickCha
         const val CHARACTER_TAG = "CHARACTER"
         const val LIST_OF_FAVORITES_TAG = "LIST_OF_FAVORITES"
         private const val CURRENT_TAB = "CURRENT_TAB"
+        private const val REQUEST_CODE_UPDATE_FAVORITE = 200
     }
 
 }
