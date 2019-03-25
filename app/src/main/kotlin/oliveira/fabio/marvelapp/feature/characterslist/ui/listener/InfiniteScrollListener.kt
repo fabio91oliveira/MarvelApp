@@ -40,5 +40,13 @@ abstract class InfiniteScrollListener(
         }
     }
 
+    fun clear() {
+        previousTotalItemCount = 0
+        firstVisibleItem = 0
+        visibleItemCount = 0
+        totalItemCount = 0
+        isLoading = true
+    }
+
     abstract fun onLoadMore(totalLatestResult: Int)
 }

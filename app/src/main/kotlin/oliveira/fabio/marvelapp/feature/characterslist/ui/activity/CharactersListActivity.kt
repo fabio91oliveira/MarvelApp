@@ -36,7 +36,7 @@ class CharactersListActivity : AppCompatActivity(), CustomSearchViewToolbar.OnSe
         object :
             InfiniteScrollListener(layoutManager, charactersListViewModel.offset) {
             override fun onLoadMore(totalLatestResult: Int) {
-                if (!charactersListViewModel.isQuerySearch) {
+                if (!charactersListViewModel.isQuerySearch && !charactersListViewModel.isFavoriteList) {
                     showFeedbackToUser(resources.getString(R.string.characters_list_loading), false)
                     setLatestTotalResult(totalLatestResult)
                     charactersListViewModel.getCharactersList()
@@ -106,7 +106,7 @@ class CharactersListActivity : AppCompatActivity(), CustomSearchViewToolbar.OnSe
 
     override fun onDestroy() {
         super.onDestroy()
-        showInitialLoading()
+        showLoading()
         charactersListViewModel.onDestroy()
     }
 
@@ -119,7 +119,7 @@ class CharactersListActivity : AppCompatActivity(), CustomSearchViewToolbar.OnSe
 
     private fun init() {
         hideContent()
-        showInitialLoading()
+        showLoading()
         setupTabLayout()
         initLiveDatas()
         initRecyclerView()
@@ -156,12 +156,12 @@ class CharactersListActivity : AppCompatActivity(), CustomSearchViewToolbar.OnSe
                             }
                             if (firstTime) firstTime = false
                             searchViewToolbar.loading(false)
-                            hideInitialLoading()
+                            hideLoading()
 
                         }
                     }
                     Response.StatusEnum.ERROR -> {
-                        hideInitialLoading()
+                        hideLoading()
                         showFeedbackToUser(
                             resources.getString(R.string.error_dialog_network_error_description),
                             false,
@@ -176,8 +176,8 @@ class CharactersListActivity : AppCompatActivity(), CustomSearchViewToolbar.OnSe
     }
 
     private fun initRecyclerView() {
-        rvCharactersList.layoutManager = layoutManager
-        rvCharactersList.adapter = charactersAdapter
+        if (rvCharactersList.layoutManager == null) rvCharactersList.layoutManager = layoutManager
+        if (rvCharactersList.adapter == null) rvCharactersList.adapter = charactersAdapter
         startInfiniteScroll()
 
         if (charactersListViewModel.lastestResults.isNotEmpty()) {
@@ -187,7 +187,7 @@ class CharactersListActivity : AppCompatActivity(), CustomSearchViewToolbar.OnSe
     }
 
     private fun clearList() {
-        charactersListViewModel.lastestResults
+        charactersListViewModel.lastestResults.clear()
         charactersListViewModel.offset = 0
         charactersAdapter.clearResults()
         charactersAdapter.notifyDataSetChanged()
@@ -200,23 +200,29 @@ class CharactersListActivity : AppCompatActivity(), CustomSearchViewToolbar.OnSe
             tab.setOnClickListener {
                 when (tab.contentDescription) {
                     resources.getString(R.string.characters_list_regular_list) -> {
-                        // TODO
+                        tabClickAction(tab)
+                        charactersListViewModel.getCharactersList()
                     }
                     resources.getString(R.string.characters_list_favorite_list) -> {
-                        // TODO
+                        tabClickAction(tab)
+                        charactersListViewModel.getFavoritesList()
                     }
                 }
-                tab.isSelected = true
-                changeTabLayoutSelectedTabColor(R.color.colorAccent)
-                charactersListViewModel.isQuerySearch = false
-                charactersListViewModel.offset = 0
-                clearList()
-                hideContent()
-                showInitialLoading()
-                initRecyclerView()
-                charactersListViewModel.getCharactersList()
+
             }
         }
+    }
+
+    private fun tabClickAction(tab: View) {
+        tab.isSelected = true
+        changeTabLayoutSelectedTabColor(R.color.colorAccent)
+        charactersListViewModel.isQuerySearch = false
+        charactersListViewModel.offset = 0
+        clearList()
+        hideContent()
+        showLoading()
+        initRecyclerView()
+        infiniteScrollListener.clear()
     }
 
     private fun initSearchViewListener() = searchViewToolbar.setTextWatcherListener(this)
@@ -254,11 +260,11 @@ class CharactersListActivity : AppCompatActivity(), CustomSearchViewToolbar.OnSe
         rvCharactersList.visibility = View.GONE
     }
 
-    private fun showInitialLoading() {
+    private fun showLoading() {
         progressBar.visibility = View.VISIBLE
     }
 
-    private fun hideInitialLoading() {
+    private fun hideLoading() {
         progressBar.visibility = View.GONE
     }
 
