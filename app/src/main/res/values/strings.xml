@@ -2,11 +2,12 @@
     <string name="app_name">MarvelApp</string>
     <string name="snack_bar_hide">Hide</string>
 
-    <string name="error_network_error_description">An error has occurred. Click at Tab to try again!</string>
+    <string name="characters_list_error_network_error_description">An error has occurred. Click at Tab to try again!</string>
     <string name="error_try_again">Error to load, click to try again</string>
 
     <string name="characters_list_loading">Loading…</string>
     <string name="characters_list_has_been_loaded">The list has been loaded.</string>
+    <string name="characters_list_no_results">There is no results to show.</string>
     <string name="characters_list_no_more_results">There is no more results.</string>
     <string name="character_details_error">An error has occurred to load.</string>
 

@@ -144,10 +144,11 @@ class CharactersListActivity : AppCompatActivity(), CharactersAdapter.OnClickCha
                                 }
                                 else -> {
                                     if (!charactersListViewModel.isQuerySearch) {
-                                        showFeedbackToUser(
-                                            resources.getString(R.string.characters_list_no_more_results),
-                                            true
-                                        )
+                                        val message =
+                                            if (charactersListViewModel.firstTime) resources.getString(R.string.characters_list_no_results) else resources.getString(
+                                                R.string.characters_list_no_more_results
+                                            )
+                                        showFeedbackToUser(message, true)
                                     }
                                     hideContent()
                                 }
@@ -161,7 +162,7 @@ class CharactersListActivity : AppCompatActivity(), CharactersAdapter.OnClickCha
                     Response.StatusEnum.ERROR -> {
                         hideLoading()
                         showFeedbackToUser(
-                            resources.getString(R.string.error_network_error_description),
+                            resources.getString(R.string.characters_list_error_network_error_description),
                             false
                         )
                     }

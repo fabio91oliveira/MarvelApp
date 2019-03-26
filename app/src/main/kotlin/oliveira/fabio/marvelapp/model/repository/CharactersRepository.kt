@@ -14,20 +14,20 @@ class CharactersRepository(private val marvelApi: MarvelApi, private val charact
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
 
-    fun getComics(characterId: Int): Flowable<ComicsResponse> =
-        marvelApi.getComics(characterId).subscribeOn(Schedulers.io())
+    fun getComics(characterId: Int, limit: Int): Flowable<ComicsResponse> =
+        marvelApi.getComics(characterId, limit).subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
 
-    fun getEvents(characterId: Int): Flowable<EventsResponse> =
-        marvelApi.getEvents(characterId).subscribeOn(Schedulers.io())
+    fun getEvents(characterId: Int, limit: Int): Flowable<EventsResponse> =
+        marvelApi.getEvents(characterId, limit).subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
 
-    fun getSeries(characterId: Int): Flowable<SeriesResponse> =
-        marvelApi.getSeries(characterId).subscribeOn(Schedulers.io())
+    fun getSeries(characterId: Int, limit: Int): Flowable<SeriesResponse> =
+        marvelApi.getSeries(characterId, limit).subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
 
-    fun getStories(characterId: Int): Flowable<StoriesResponse> =
-        marvelApi.getStories(characterId).subscribeOn(Schedulers.io())
+    fun getStories(characterId: Int, limit: Int): Flowable<StoriesResponse> =
+        marvelApi.getStories(characterId, limit).subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
 
     fun addFavoriteCharacter(character: Character): Flowable<Long> {

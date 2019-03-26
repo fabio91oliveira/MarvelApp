@@ -28,10 +28,10 @@ class CharacterDetailsViewModel(private val charactersRepository: CharactersRepo
     var isLoadedWithNoResults = false
 
     fun getDatasByCharacterId(characterId: Int) {
-        val source1 = charactersRepository.getComics(characterId)
-        val source2 = charactersRepository.getEvents(characterId)
-        val source3 = charactersRepository.getSeries(characterId)
-        val source4 = charactersRepository.getStories(characterId)
+        val source1 = charactersRepository.getComics(characterId, LIMIT)
+        val source2 = charactersRepository.getEvents(characterId, LIMIT)
+        val source3 = charactersRepository.getSeries(characterId, LIMIT)
+        val source4 = charactersRepository.getStories(characterId, LIMIT)
 
         compositeDisposable.add(
             Flowable.zip(
@@ -103,17 +103,15 @@ class CharacterDetailsViewModel(private val charactersRepository: CharactersRepo
 
         comics.data?.let {
             it.count?.run { if (toInt() > MIN_ITEMS) list.add(HeaderItem(COMICS_TAG)) }
-            it.results?.forEachIndexed { i, item ->
-                if (i + 1 <= MAX_ITEMS_PER_LIST) {
-                    item?.getTitleFormatted()?.run {
-                        item.getDescriptionFormatted().let { description ->
-                            list.add(
-                                SubItem(
-                                    handleEmptyText(this, NO_TITLE_FROM_API),
-                                    handleEmptyText(description, NO_DESCRIPTION_FROM_API)
-                                )
+            it.results?.forEach { item ->
+                item?.getTitleFormatted()?.run {
+                    item.getDescriptionFormatted().let { description ->
+                        list.add(
+                            SubItem(
+                                handleEmptyText(this, NO_TITLE_FROM_API),
+                                handleEmptyText(description, NO_DESCRIPTION_FROM_API)
                             )
-                        }
+                        )
                     }
                 }
             }
@@ -121,17 +119,15 @@ class CharacterDetailsViewModel(private val charactersRepository: CharactersRepo
 
         events.data?.let {
             it.count?.run { if (toInt() > MIN_ITEMS) list.add(HeaderItem(EVENTS_TAG)) }
-            it.results?.forEachIndexed { i, item ->
-                if (i + 1 <= MAX_ITEMS_PER_LIST) {
-                    item?.getTitleFormatted()?.run {
-                        item.getDescriptionFormatted().let { description ->
-                            list.add(
-                                SubItem(
-                                    handleEmptyText(this, NO_TITLE_FROM_API),
-                                    handleEmptyText(description, NO_DESCRIPTION_FROM_API)
-                                )
+            it.results?.forEach { item ->
+                item?.getTitleFormatted()?.run {
+                    item.getDescriptionFormatted().let { description ->
+                        list.add(
+                            SubItem(
+                                handleEmptyText(this, NO_TITLE_FROM_API),
+                                handleEmptyText(description, NO_DESCRIPTION_FROM_API)
                             )
-                        }
+                        )
                     }
                 }
             }
@@ -139,17 +135,15 @@ class CharacterDetailsViewModel(private val charactersRepository: CharactersRepo
 
         series.data?.let {
             it.count?.run { if (toInt() > MIN_ITEMS) list.add(HeaderItem(SERIES_TAG)) }
-            it.results?.forEachIndexed { i, item ->
-                if (i + 1 <= MAX_ITEMS_PER_LIST) {
-                    item?.getTitleFormatted()?.run {
-                        item.getDescriptionFormatted().let { description ->
-                            list.add(
-                                SubItem(
-                                    handleEmptyText(this, NO_TITLE_FROM_API),
-                                    handleEmptyText(description, NO_DESCRIPTION_FROM_API)
-                                )
+            it.results?.forEach { item ->
+                item?.getTitleFormatted()?.run {
+                    item.getDescriptionFormatted().let { description ->
+                        list.add(
+                            SubItem(
+                                handleEmptyText(this, NO_TITLE_FROM_API),
+                                handleEmptyText(description, NO_DESCRIPTION_FROM_API)
                             )
-                        }
+                        )
                     }
                 }
             }
@@ -157,17 +151,15 @@ class CharacterDetailsViewModel(private val charactersRepository: CharactersRepo
 
         stories.data?.let {
             it.count?.run { if (toInt() > MIN_ITEMS) list.add(HeaderItem(STORIES_TAG)) }
-            it.results?.forEachIndexed { i, item ->
-                if (i + 1 <= MAX_ITEMS_PER_LIST) {
-                    item?.getTitleFormatted()?.run {
-                        item.getDescriptionFormatted().let { description ->
-                            list.add(
-                                SubItem(
-                                    handleEmptyText(this, NO_TITLE_FROM_API),
-                                    handleEmptyText(description, NO_DESCRIPTION_FROM_API)
-                                )
+            it.results?.forEach { item ->
+                item?.getTitleFormatted()?.run {
+                    item.getDescriptionFormatted().let { description ->
+                        list.add(
+                            SubItem(
+                                handleEmptyText(this, NO_TITLE_FROM_API),
+                                handleEmptyText(description, NO_DESCRIPTION_FROM_API)
                             )
-                        }
+                        )
                     }
                 }
             }
@@ -191,8 +183,8 @@ class CharacterDetailsViewModel(private val charactersRepository: CharactersRepo
     fun onDestroy() = compositeDisposable.takeIf { it.isDisposed }?.run { dispose() }
 
     companion object {
+        private const val LIMIT = 3
         private const val MIN_ITEMS = 1
-        private const val MAX_ITEMS_PER_LIST = 3
         private const val COMICS_TAG = "Comics"
         private const val EVENTS_TAG = "Events"
         private const val STORIES_TAG = "Stories"
