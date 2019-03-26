@@ -102,7 +102,7 @@ class CharacterDetailsViewModel(private val charactersRepository: CharactersRepo
         val stories = it.fourth
 
         comics.data?.let {
-            it.count?.run { if (toInt() > MIN_ITEMS) list.add(HeaderItem(COMICS_TAG)) }
+            it.count?.run { if (toInt() >= MIN_ITEMS) list.add(HeaderItem(COMICS_TAG)) }
             it.results?.forEach { item ->
                 item?.getTitleFormatted()?.run {
                     item.getDescriptionFormatted().let { description ->
@@ -118,7 +118,7 @@ class CharacterDetailsViewModel(private val charactersRepository: CharactersRepo
         }
 
         events.data?.let {
-            it.count?.run { if (toInt() > MIN_ITEMS) list.add(HeaderItem(EVENTS_TAG)) }
+            it.count?.run { if (toInt() >= MIN_ITEMS) list.add(HeaderItem(EVENTS_TAG)) }
             it.results?.forEach { item ->
                 item?.getTitleFormatted()?.run {
                     item.getDescriptionFormatted().let { description ->
@@ -134,7 +134,7 @@ class CharacterDetailsViewModel(private val charactersRepository: CharactersRepo
         }
 
         series.data?.let {
-            it.count?.run { if (toInt() > MIN_ITEMS) list.add(HeaderItem(SERIES_TAG)) }
+            it.count?.run { if (toInt() >= MIN_ITEMS) list.add(HeaderItem(SERIES_TAG)) }
             it.results?.forEach { item ->
                 item?.getTitleFormatted()?.run {
                     item.getDescriptionFormatted().let { description ->
@@ -150,7 +150,7 @@ class CharacterDetailsViewModel(private val charactersRepository: CharactersRepo
         }
 
         stories.data?.let {
-            it.count?.run { if (toInt() > MIN_ITEMS) list.add(HeaderItem(STORIES_TAG)) }
+            it.count?.run { if (toInt() >= MIN_ITEMS) list.add(HeaderItem(STORIES_TAG)) }
             it.results?.forEach { item ->
                 item?.getTitleFormatted()?.run {
                     item.getDescriptionFormatted().let { description ->
