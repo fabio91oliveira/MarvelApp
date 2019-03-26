@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme.SplashTheme">
+        <item name="android:navigationBarColor">@color/colorRedDark</item>
+        <item name="android:statusBarColor">@color/colorRedDark</item>
+        <item name="colorPrimaryDark">@color/colorRedDark</item>
+        <item name="android:windowBackground">@drawable/splash_screen_theme</item>
+    </style>
+</resources>

@@ -25,6 +25,7 @@ class CharacterDetailsViewModel(private val charactersRepository: CharactersRepo
     val mutableLiveDataEventsList by lazy { MutableLiveData<Event<Response<MutableList<Item>>>>() }
     val listOfAllFavorites by lazy { mutableListOf<Character>() }
     val lastResultsInfo by lazy { mutableListOf<Item>() }
+    var isLoadedWithNoResults = false
 
     fun getDatasByCharacterId(characterId: Int) {
         val source1 = charactersRepository.getComics(characterId)

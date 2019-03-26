@@ -39,6 +39,8 @@ class CharacterDetailsActivity : AppCompatActivity() {
             setValues()
             initRecyclerView()
             initLiveDatas()
+            showLoadingMoreInfo(false)
+            if (characterDetailsViewModel.isLoadedWithNoResults) hideMoreInfo()
         } ?: run {
             init()
         }
@@ -107,13 +109,15 @@ class CharacterDetailsActivity : AppCompatActivity() {
                             } else {
                                 showLoadingMoreInfo(false)
                                 hideMoreInfo()
+                                characterDetailsViewModel.isLoadedWithNoResults = true
                             }
                         }
                     }
                     Response.StatusEnum.ERROR -> {
                         showFeedbackToUser(resources.getString(R.string.character_details_error))
-                        hideMoreInfo()
                         showLoadingMoreInfo(false)
+                        hideMoreInfo()
+                        characterDetailsViewModel.isLoadedWithNoResults = true
                     }
                 }
             }
@@ -139,7 +143,7 @@ class CharacterDetailsActivity : AppCompatActivity() {
     }
 
     private fun hideMoreInfo() {
-        txtCharacterMoreInformationTitle.visibility = View.GONE
+        txtCharacterMoreInformationTitle.visibility = View.INVISIBLE
     }
 
     private fun handleStrings(message: String) = if (message.isEmpty()) handledMessage else message
