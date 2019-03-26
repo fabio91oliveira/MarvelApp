@@ -21,12 +21,13 @@ import oliveira.fabio.marvelapp.feature.characterslist.ui.listener.InfiniteScrol
 import oliveira.fabio.marvelapp.feature.characterslist.viewmodel.CharactersListViewModel
 import oliveira.fabio.marvelapp.model.persistence.Character
 import oliveira.fabio.marvelapp.util.Response
+import oliveira.fabio.marvelapp.util.extensions.doRotateAnimation
+import oliveira.fabio.marvelapp.util.extensions.hideKeyboard
 import org.koin.android.viewmodel.ext.android.viewModel
 
 
 class CharactersListActivity : AppCompatActivity(), CharactersAdapter.OnClickCharacterListener, TextWatcher {
 
-    private var firstTime = true
     private val charactersListViewModel: CharactersListViewModel by viewModel()
     private val charactersAdapter by lazy { CharactersAdapter(this) }
     private val layoutManager by lazy { LinearLayoutManager(applicationContext, RecyclerView.VERTICAL, false) }
@@ -96,12 +97,12 @@ class CharactersListActivity : AppCompatActivity(), CharactersAdapter.OnClickCha
         if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE_UPDATE_FAVORITE) {
             val character = data?.getSerializableExtra(CHARACTER_TAG) as Character
             charactersAdapter.validateCharacterFavorite(character)
+            charactersListViewModel.refreshFavoritesList()
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        showLoading()
         charactersListViewModel.onDestroy()
     }
 
@@ -131,10 +132,10 @@ class CharactersListActivity : AppCompatActivity(), CharactersAdapter.OnClickCha
                             when (isNotEmpty()) {
                                 true -> {
                                     if (charactersListViewModel.isQuerySearch) clearList()
-                                    charactersListViewModel.lastestResults.addAll(this)
+                                    charactersListViewModel.latestResults.addAll(this)
                                     addResults(this)
                                     showContent()
-                                    if (firstTime.not()) {
+                                    if (charactersListViewModel.firstTime.not()) {
                                         showFeedbackToUser(
                                             resources.getString(R.string.characters_list_has_been_loaded),
                                             true
@@ -142,14 +143,16 @@ class CharactersListActivity : AppCompatActivity(), CharactersAdapter.OnClickCha
                                     }
                                 }
                                 else -> {
+                                    if (!charactersListViewModel.isQuerySearch) {
+                                        showFeedbackToUser(
+                                            resources.getString(R.string.characters_list_no_more_results),
+                                            true
+                                        )
+                                    }
                                     hideContent()
-                                    showFeedbackToUser(
-                                        resources.getString(R.string.characters_list_no_more_results),
-                                        true
-                                    )
                                 }
                             }
-                            if (firstTime) firstTime = false
+                            if (charactersListViewModel.firstTime) charactersListViewModel.firstTime = false
                             searchViewToolbar.loading(false)
                             hideLoading()
 
@@ -158,31 +161,29 @@ class CharactersListActivity : AppCompatActivity(), CharactersAdapter.OnClickCha
                     Response.StatusEnum.ERROR -> {
                         hideLoading()
                         showFeedbackToUser(
-                            resources.getString(R.string.error_dialog_network_error_description),
-                            false,
-                            View.OnClickListener {
-                                charactersListViewModel.getCharactersList()
-                                showFeedbackToUser(resources.getString(R.string.characters_list_loading), false)
-                            })
+                            resources.getString(R.string.error_network_error_description),
+                            false
+                        )
                     }
                 }
             }
         })
     }
 
+
     private fun initRecyclerView() {
         if (rvCharactersList.layoutManager == null) rvCharactersList.layoutManager = layoutManager
         if (rvCharactersList.adapter == null) rvCharactersList.adapter = charactersAdapter
         startInfiniteScroll()
 
-        if (charactersListViewModel.lastestResults.isNotEmpty()) {
-            addResults(charactersListViewModel.lastestResults)
+        if (charactersListViewModel.latestResults.isNotEmpty()) {
+            addResults(charactersListViewModel.latestResults)
             showContent()
         }
     }
 
     private fun clearList() {
-        charactersListViewModel.lastestResults.clear()
+        charactersListViewModel.latestResults.clear()
         charactersListViewModel.offset = 0
         charactersAdapter.clearResults()
         charactersAdapter.notifyDataSetChanged()
@@ -200,6 +201,7 @@ class CharactersListActivity : AppCompatActivity(), CharactersAdapter.OnClickCha
                     }
                     resources.getString(R.string.characters_list_favorite_list) -> {
                         tabClickAction(tab)
+                        charactersListViewModel.isFavoriteList = true
                         charactersListViewModel.getFavoritesList()
                     }
                 }
@@ -213,6 +215,7 @@ class CharactersListActivity : AppCompatActivity(), CharactersAdapter.OnClickCha
         changeTabLayoutSelectedTabColor(R.color.colorAccent)
         charactersListViewModel.isQuerySearch = false
         charactersListViewModel.offset = 0
+        charactersListViewModel.firstTime
         clearList()
         hideContent()
         showLoading()
@@ -241,7 +244,7 @@ class CharactersListActivity : AppCompatActivity(), CharactersAdapter.OnClickCha
             } else {
                 setAction(
                     resources.getString(
-                        oliveira.fabio.marvelapp.R.string.error_dialog_try_again
+                        oliveira.fabio.marvelapp.R.string.error_try_again
                     ), listener
                 )
             }
@@ -257,11 +260,14 @@ class CharactersListActivity : AppCompatActivity(), CharactersAdapter.OnClickCha
     }
 
     private fun showLoading() {
-        progressBar.visibility = View.VISIBLE
+        loading.doRotateAnimation()
+        loading.visibility = View.VISIBLE
+        loading.hideKeyboard()
     }
 
     private fun hideLoading() {
-        progressBar.visibility = View.GONE
+        loading.clearAnimation()
+        loading.visibility = View.GONE
     }
 
     private fun unselectTabs() {

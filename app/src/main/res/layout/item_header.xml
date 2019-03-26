@@ -5,20 +5,18 @@
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorWhite">
+        android:background="@color/colorSofterGrey"
+    android:padding="@dimen/margin_sixteen">
 
     <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/txtHeaderTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             tools:text="@tools:sample/lorem"
-            android:layout_marginTop="@dimen/margin_ten"
-            android:layout_marginStart="@dimen/margin_ten"
-            android:layout_marginLeft="@dimen/margin_ten"
-            android:layout_marginEnd="@dimen/margin_ten"
-            android:layout_marginRight="@dimen/margin_ten"
-            android:textColor="@color/colorBlack"
-            android:textSize="@dimen/text_twenty_two"
+            android:textColor="@color/colorSoftGrey"
+            android:textSize="@dimen/text_eighteen"
+            android:textAllCaps="true"
+            android:textStyle="bold"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>

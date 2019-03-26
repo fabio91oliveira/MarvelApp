@@ -10,7 +10,7 @@ import kotlinx.android.synthetic.main.item_sub_item.*
 import oliveira.fabio.marvelapp.R
 import oliveira.fabio.marvelapp.model.vo.Item
 
-class CharacterDetailsAdapter() : RecyclerView.Adapter<CharacterDetailsViewHolder>() {
+class CharacterDetailsAdapter : RecyclerView.Adapter<CharacterDetailsViewHolder>() {
 
     private var list = mutableListOf<Item>()
 

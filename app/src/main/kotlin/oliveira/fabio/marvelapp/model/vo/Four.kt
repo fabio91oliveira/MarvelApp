@@ -1,4 +1,4 @@
-package oliveira.fabio.marvelapp.model.response
+package oliveira.fabio.marvelapp.model.vo
 
 import java.io.Serializable
 

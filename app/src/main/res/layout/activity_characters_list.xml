@@ -12,7 +12,7 @@
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/container"
             android:layout_width="match_parent" android:layout_height="match_parent"
-            android:background="@color/colorSoftGrey"
+            android:background="@color/colorHardGrey"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <com.google.android.material.appbar.AppBarLayout
@@ -57,17 +57,17 @@
                 tools:listitem="@layout/item_character"
                 android:visibility="gone"/>
 
-        <androidx.core.widget.ContentLoadingProgressBar
-                android:id="@+id/progressBar"
-                style="?android:attr/progressBarStyleLarge"
-                android:indeterminate="true"
+        <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/loading"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
-                android:visibility="gone"/>
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_loading"
+                tools:visibility="gone"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

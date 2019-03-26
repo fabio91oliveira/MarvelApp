@@ -1,56 +1,46 @@
 package oliveira.fabio.marvelapp.feature.characterslist.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.reactivex.Flowable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.BiFunction
-import oliveira.fabio.marvelapp.model.repository.CharactersRepository
 import oliveira.fabio.marvelapp.model.persistence.Character
+import oliveira.fabio.marvelapp.model.repository.CharactersRepository
 import oliveira.fabio.marvelapp.model.response.CharactersResponse
-import oliveira.fabio.marvelapp.util.Response
 import oliveira.fabio.marvelapp.util.Event
+import oliveira.fabio.marvelapp.util.Response
 
 class CharactersListViewModel(private val charactersRepository: CharactersRepository) : ViewModel() {
 
+    private var latestData: CharactersResponse.Data? = null
     private val compositeDisposable by lazy { CompositeDisposable() }
     val listOfAllFavorites by lazy { arrayListOf<Character>() }
     val mutableLiveDataResults by lazy { MutableLiveData<Event<Response<List<Character>>>>() }
+    val latestResults by lazy { mutableListOf<Character>() }
 
     var isQuerySearch: Boolean = false
     var isFavoriteList = false
-
-    var lastestData: CharactersResponse.Data? = null
-
-    val lastestResults by lazy { mutableListOf<Character>() }
-
     var offset = 0
+    var firstTime = true
 
     fun getFavoritesList() {
-        isFavoriteList = true
         mutableLiveDataResults.value = Event(Response.success(listOfAllFavorites))
+    }
+
+    fun refreshFavoritesList() {
+        compositeDisposable.add(
+            charactersRepository.getAllFavorites().subscribe {
+                listOfAllFavorites.clear()
+                listOfAllFavorites.addAll(it)
+            }
+        )
     }
 
     fun getCharactersList(name: String? = null) {
         isFavoriteList = false
         val source1 = charactersRepository.getAllFavorites()
-//            .subscribe {
-//                listOfAllFavorites.addAll(it)
-//            }
-
         val source2 = charactersRepository.getCharacters(LIMIT_PER_PAGE, offset, name)
-//            .map {
-//                parseToCharacterList(it.data)
-//            }
-//            .subscribe({
-//                lastestResults.addAll(it)
-//                mutableLiveDataResults.value = Event(Response.success(it))
-//            },
-//                {
-//                    mutableLiveDataResults.value = Event(Response.error(it.message))
-//                })
-
 
         compositeDisposable.add(
             Flowable.zip(
@@ -60,38 +50,49 @@ class CharactersListViewModel(private val charactersRepository: CharactersReposi
                     Pair(t1, t2)
                 }).map {
                 Pair(it.first, parseToCharacterList(it.second.data))
-            }.subscribe {
+            }.subscribe({
                 listOfAllFavorites.clear()
                 listOfAllFavorites.addAll(it.first)
                 validateFavoriteCharacters(it.second)
                 mutableLiveDataResults.value = Event(Response.success(it.second))
-            }
+            }, {
+                mutableLiveDataResults.value = Event(Response.error(it.message))
+            })
         )
     }
 
     fun addRemoveFavorite(character: Character) {
+        val source1 = charactersRepository.deleteFavorite(character)
+        val source2 = charactersRepository.getAllFavorites()
+        val source3 = charactersRepository.addFavoriteCharacter(character)
+
         compositeDisposable.add(
             if (findIdInFavoriteList(character.id)) {
-                charactersRepository.deleteFavorite(character).subscribe({
-                    Log.d("DELETADO", "ta la")
-                    charactersRepository.getAllFavorites().subscribe {
-                        listOfAllFavorites.clear()
-                        listOfAllFavorites.addAll(it)
-                    }
-                }, {
-                    Log.d("foi nao ", "hauha")
-                })
+                Flowable.zip(
+                    source1,
+                    source2,
+                    BiFunction<Long, List<Character>, Pair<Long, List<Character>>> { t1, t2 ->
+                        Pair(t1, t2)
+                    }).map {
+                    Pair(it.first, it.second)
+                }.subscribe {
+                    listOfAllFavorites.clear()
+                    listOfAllFavorites.addAll(it.second)
+                }
             } else {
-                charactersRepository.addFavoriteCharacter(character).subscribe({
-                    Log.d("SALVO", "ta la")
-                    charactersRepository.getAllFavorites().subscribe {
-                        listOfAllFavorites.clear()
-                        listOfAllFavorites.addAll(it)
-                    }
-                }, {
-                    Log.d("foi nao ", "hauha")
-                })
+                Flowable.zip(
+                    source3,
+                    source2,
+                    BiFunction<Long, List<Character>, Pair<Long, List<Character>>> { t1, t2 ->
+                        Pair(t1, t2)
+                    }).map {
+                    Pair(it.first, it.second)
+                }.subscribe {
+                    listOfAllFavorites.clear()
+                    listOfAllFavorites.addAll(it.second)
+                }
             }
+
         )
     }
 
@@ -99,8 +100,8 @@ class CharactersListViewModel(private val charactersRepository: CharactersReposi
 
     private fun parseToCharacterList(data: CharactersResponse.Data): MutableList<Character> {
         val charactersList = mutableListOf<Character>()
-        lastestData = data
-        lastestData?.results?.forEach {
+        latestData = data
+        latestData?.results?.forEach {
             val character = Character(
                 it.name,
                 false,
@@ -127,7 +128,6 @@ class CharactersListViewModel(private val charactersRepository: CharactersReposi
                 return true
             }
         }
-
         return false
     }
 

@@ -1,8 +1,7 @@
 package oliveira.fabio.marvelapp.util
 
-open class Event<T>(var content: T) {
-    var hasBeenHandled = false
-        private set
+open class Event<T>(private var content: T) {
+    private var hasBeenHandled = false
 
     fun getContentIfNotHandled(): T? {
         return if (hasBeenHandled) {

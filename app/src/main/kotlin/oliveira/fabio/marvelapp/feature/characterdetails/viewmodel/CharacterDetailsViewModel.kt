@@ -1,14 +1,18 @@
 package oliveira.fabio.marvelapp.feature.characterdetails.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.reactivex.Flowable
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.functions.BiFunction
 import io.reactivex.functions.Function4
 import oliveira.fabio.marvelapp.model.persistence.Character
 import oliveira.fabio.marvelapp.model.repository.CharactersRepository
-import oliveira.fabio.marvelapp.model.response.*
+import oliveira.fabio.marvelapp.model.response.ComicsResponse
+import oliveira.fabio.marvelapp.model.response.EventsResponse
+import oliveira.fabio.marvelapp.model.response.SeriesResponse
+import oliveira.fabio.marvelapp.model.response.StoriesResponse
+import oliveira.fabio.marvelapp.model.vo.Four
 import oliveira.fabio.marvelapp.model.vo.HeaderItem
 import oliveira.fabio.marvelapp.model.vo.Item
 import oliveira.fabio.marvelapp.model.vo.SubItem
@@ -20,7 +24,7 @@ class CharacterDetailsViewModel(private val charactersRepository: CharactersRepo
     private val compositeDisposable by lazy { CompositeDisposable() }
     val mutableLiveDataEventsList by lazy { MutableLiveData<Event<Response<MutableList<Item>>>>() }
     val listOfAllFavorites by lazy { mutableListOf<Character>() }
-    val lastResultsInfos by lazy { mutableListOf<Item>() }
+    val lastResultsInfo by lazy { mutableListOf<Item>() }
 
     fun getDatasByCharacterId(characterId: Int) {
         val source1 = charactersRepository.getComics(characterId)
@@ -43,37 +47,48 @@ class CharacterDetailsViewModel(private val charactersRepository: CharactersRepo
                     )
                 }).map { parseToItem(it) }
                 .subscribe({
-                    lastResultsInfos.clear()
-                    lastResultsInfos.addAll(it)
+                    lastResultsInfo.clear()
+                    lastResultsInfo.addAll(it)
                     mutableLiveDataEventsList.value = Event(Response.success(it))
-                }, {})
+                }, {
+                    mutableLiveDataEventsList.value = Event(Response.error(it.message))
+                })
         )
 
     }
 
     fun addRemoveFavorite(character: Character) {
+        val source1 = charactersRepository.deleteFavorite(character)
+        val source2 = charactersRepository.getAllFavorites()
+        val source3 = charactersRepository.addFavoriteCharacter(character)
+
         compositeDisposable.add(
             if (findIdInFavoriteList(character.id)) {
-                charactersRepository.deleteFavorite(character).subscribe({
-                    Log.d("DELETADO", "ta la")
-                    charactersRepository.getAllFavorites().subscribe {
-                        listOfAllFavorites.clear()
-                        listOfAllFavorites.addAll(it)
-                    }
-                }, {
-                    Log.d("foi nao ", "hauha")
-                })
+                Flowable.zip(
+                    source1,
+                    source2,
+                    BiFunction<Long, List<Character>, Pair<Long, List<Character>>> { t1, t2 ->
+                        Pair(t1, t2)
+                    }).map {
+                    Pair(it.first, it.second)
+                }.subscribe {
+                    listOfAllFavorites.clear()
+                    listOfAllFavorites.addAll(it.second)
+                }
             } else {
-                charactersRepository.addFavoriteCharacter(character).subscribe({
-                    Log.d("SALVO", "ta la")
-                    charactersRepository.getAllFavorites().subscribe {
-                        listOfAllFavorites.clear()
-                        listOfAllFavorites.addAll(it)
-                    }
-                }, {
-                    Log.d("foi nao ", "hauha")
-                })
+                Flowable.zip(
+                    source3,
+                    source2,
+                    BiFunction<Long, List<Character>, Pair<Long, List<Character>>> { t1, t2 ->
+                        Pair(t1, t2)
+                    }).map {
+                    Pair(it.first, it.second)
+                }.subscribe {
+                    listOfAllFavorites.clear()
+                    listOfAllFavorites.addAll(it.second)
+                }
             }
+
         )
     }
 
@@ -89,8 +104,8 @@ class CharacterDetailsViewModel(private val charactersRepository: CharactersRepo
             it.count?.run { if (toInt() > MIN_ITEMS) list.add(HeaderItem(COMICS_TAG)) }
             it.results?.forEachIndexed { i, item ->
                 if (i + 1 <= MAX_ITEMS_PER_LIST) {
-                    item?.title?.run {
-                        item.description?.let { description ->
+                    item?.getTitleFormatted()?.run {
+                        item.getDescriptionFormatted().let { description ->
                             list.add(
                                 SubItem(
                                     handleEmptyText(this, NO_TITLE_FROM_API),
@@ -107,8 +122,8 @@ class CharacterDetailsViewModel(private val charactersRepository: CharactersRepo
             it.count?.run { if (toInt() > MIN_ITEMS) list.add(HeaderItem(EVENTS_TAG)) }
             it.results?.forEachIndexed { i, item ->
                 if (i + 1 <= MAX_ITEMS_PER_LIST) {
-                    item?.title?.run {
-                        item.description?.let { description ->
+                    item?.getTitleFormatted()?.run {
+                        item.getDescriptionFormatted().let { description ->
                             list.add(
                                 SubItem(
                                     handleEmptyText(this, NO_TITLE_FROM_API),
@@ -122,11 +137,11 @@ class CharacterDetailsViewModel(private val charactersRepository: CharactersRepo
         }
 
         series.data?.let {
-            it.count?.run { if (toInt() > MIN_ITEMS) list.add(HeaderItem(STORIES_TAG)) }
+            it.count?.run { if (toInt() > MIN_ITEMS) list.add(HeaderItem(SERIES_TAG)) }
             it.results?.forEachIndexed { i, item ->
                 if (i + 1 <= MAX_ITEMS_PER_LIST) {
-                    item?.title?.run {
-                        item.description?.let { description ->
+                    item?.getTitleFormatted()?.run {
+                        item.getDescriptionFormatted().let { description ->
                             list.add(
                                 SubItem(
                                     handleEmptyText(this, NO_TITLE_FROM_API),
@@ -140,11 +155,11 @@ class CharacterDetailsViewModel(private val charactersRepository: CharactersRepo
         }
 
         stories.data?.let {
-            it.count?.run { if (toInt() > MIN_ITEMS) list.add(HeaderItem(SERIES_TAG)) }
+            it.count?.run { if (toInt() > MIN_ITEMS) list.add(HeaderItem(STORIES_TAG)) }
             it.results?.forEachIndexed { i, item ->
                 if (i + 1 <= MAX_ITEMS_PER_LIST) {
-                    item?.title?.run {
-                        item.description?.let { description ->
+                    item?.getTitleFormatted()?.run {
+                        item.getDescriptionFormatted().let { description ->
                             list.add(
                                 SubItem(
                                     handleEmptyText(this, NO_TITLE_FROM_API),

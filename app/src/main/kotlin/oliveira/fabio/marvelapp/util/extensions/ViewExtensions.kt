@@ -3,6 +3,8 @@ package oliveira.fabio.marvelapp.util.extensions
 import android.app.Activity
 import android.content.Context
 import android.view.View
+import android.view.animation.Animation
+import android.view.animation.RotateAnimation
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
@@ -42,4 +44,16 @@ fun AppCompatImageView.loadImageByGlide(image: Any) {
         .transition(
             DrawableTransitionOptions.withCrossFade()
         ).into(this)
+}
+
+fun View.doRotateAnimation() {
+    val rotate = RotateAnimation(
+        0f, 360f,
+        Animation.RELATIVE_TO_SELF, 0.5f,
+        Animation.RELATIVE_TO_SELF, 0.5f
+    )
+
+    rotate.duration = 900
+    rotate.repeatCount = Animation.INFINITE
+    startAnimation(rotate)
 }

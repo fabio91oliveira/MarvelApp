@@ -4,14 +4,13 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cardCornerRadius="@dimen/margin_four"
-        app:cardUseCompatPadding="true">
+        android:layout_height="wrap_content">
 
     <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
 
         <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/imgCharacter"
@@ -20,47 +19,50 @@
                 app:srcCompat="@color/colorPrimary"
                 app:layout_constraintTop_toTopOf="parent"/>
 
-        <View
-                android:id="@+id/viewLine"
+        <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/asd"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:background="@color/colorWhite"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+                android:layout_height="@dimen/character_list_image_item_height"
+                app:srcCompat="@drawable/filter"
+                app:layout_constraintTop_toTopOf="parent"/>
+
 
         <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/txtCharacterName"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/text_twenty_two"
-                android:textStyle="bold"
+                android:textSize="@dimen/text_eighteen"
+                android:textAllCaps="true"
                 android:layout_marginStart="@dimen/margin_ten"
                 android:layout_marginLeft="@dimen/margin_ten"
+                android:layout_marginTop="@dimen/margin_four"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:textColor="@color/colorPrimaryDark"
+                android:textStyle="bold"
+                android:textColor="@color/colorWhite"
                 android:layout_marginEnd="@dimen/margin_six"
                 android:layout_marginRight="@dimen/margin_six"
-                app:layout_constraintTop_toTopOf="@id/chkFavorite"
-                app:layout_constraintBottom_toBottomOf="@id/chkFavorite"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/chkFavorite"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:text="@tools:sample/lorem"/>
 
         <androidx.appcompat.widget.AppCompatCheckBox
                 android:id="@+id/chkFavorite"
                 android:layout_width="@dimen/favorite_icon_size"
                 android:layout_height="@dimen/favorite_icon_size"
-                android:layout_marginEnd="@dimen/margin_ten"
-                android:layout_marginRight="@dimen/margin_ten"
-                app:layout_constraintTop_toTopOf="@+id/viewLine"
-                app:layout_constraintBottom_toBottomOf="@id/viewLine"
+                android:layout_marginEnd="@dimen/margin_sixteen"
+                android:layout_marginRight="@dimen/margin_sixteen"
+                android:layout_marginTop="@dimen/margin_twenty_four"
+                app:layout_constraintTop_toTopOf="@+id/txtCharacterName"
+                app:layout_constraintBottom_toBottomOf="@+id/txtCharacterName"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:background="@drawable/selector_favorite_button"
                 android:stateListAnimator="@animator/scale"
                 android:clickable="true"
                 android:button="@null"
                 android:checked="false"
-                android:focusable="true"/>
+                android:focusable="true" tools:targetApi="lollipop"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

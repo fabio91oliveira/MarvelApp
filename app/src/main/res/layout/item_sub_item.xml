@@ -18,7 +18,8 @@
             android:layout_marginEnd="@dimen/margin_ten"
             android:layout_marginRight="@dimen/margin_ten"
             android:textColor="@color/colorBlack"
-            android:textSize="@dimen/text_eighteen"
+            android:textSize="@dimen/text_sixteen"
+            android:textStyle="bold"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
@@ -27,7 +28,9 @@
             android:id="@+id/txtSubItemDescription"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_six"
             tools:text="@tools:sample/lorem"
+            android:textSize="@dimen/text_twelve"
             app:layout_constraintTop_toBottomOf="@+id/txtSubItemTitle"
             app:layout_constraintStart_toStartOf="@id/txtSubItemTitle"
             app:layout_constraintEnd_toEndOf="@id/txtSubItemTitle"/>
@@ -36,7 +39,7 @@
             android:id="@+id/viewLine"
             android:layout_width="match_parent"
             android:layout_height="@dimen/margin_one"
-            android:background="@color/colorSoftGrey"
+            android:background="@color/colorSofterGrey"
             android:layout_marginTop="@dimen/margin_ten"
             app:layout_constraintTop_toBottomOf="@id/txtSubItemDescription"
             app:layout_constraintStart_toStartOf="parent"

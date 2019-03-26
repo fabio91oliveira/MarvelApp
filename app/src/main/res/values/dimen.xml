@@ -7,15 +7,14 @@
     <dimen name="margin_twelve">12dp</dimen>
     <dimen name="margin_sixteen">16dp</dimen>
     <dimen name="margin_twenty_four">24dp</dimen>
-    <dimen name="margin_forty">40dp</dimen>
 
     <dimen name="text_twelve">12sp</dimen>
-    <dimen name="text_fourteen">14sp</dimen>
+    <dimen name="text_sixteen">16sp</dimen>
     <dimen name="text_eighteen">18sp</dimen>
     <dimen name="text_twenty_two">22sp</dimen>
 
     <dimen name="character_list_image_item_height">210dp</dimen>
-    <dimen name="favorite_icon_size">30dp</dimen>
+    <dimen name="favorite_icon_size">35dp</dimen>
 
-    <dimen name="app_bar_height">192dp</dimen>
+    <dimen name="app_bar_height">292dp</dimen>
 </resources>

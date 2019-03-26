@@ -2,14 +2,15 @@ package oliveira.fabio.marvelapp.feature.characterdetails.ui.activity
 
 import android.app.Activity
 import android.content.Intent
-import android.content.res.ColorStateList
 import android.graphics.PorterDuff
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_character_details.*
 import oliveira.fabio.marvelapp.R
 import oliveira.fabio.marvelapp.feature.characterdetails.ui.adapter.CharacterDetailsAdapter
@@ -52,44 +53,39 @@ class CharacterDetailsActivity : AppCompatActivity() {
         setupToolbar()
         setValues()
         initRecyclerView()
-        characterDetailsViewModel.listOfAllFavorites.addAll(listOfAllFavorites)
-        getCharacterMoreInfo()
         initLiveDatas()
-        getCharacterMoreInfo()
-        showLoadingMoreInfo()
+        showLoadingMoreInfo(true)
+        characterDetailsViewModel.listOfAllFavorites.addAll(listOfAllFavorites)
+        characterDetailsViewModel.getDatasByCharacterId(character.id.toInt())
     }
 
     private fun initRecyclerView() {
         rvCharacterInfoList.layoutManager =
             LinearLayoutManager(applicationContext, RecyclerView.VERTICAL, false)
         rvCharacterInfoList.adapter = characterDetailsAdapter
-        if (characterDetailsViewModel.lastResultsInfos.isNotEmpty()) {
-            characterDetailsAdapter.addItems(characterDetailsViewModel.lastResultsInfos)
+        if (characterDetailsViewModel.lastResultsInfo.isNotEmpty()) {
+            characterDetailsAdapter.addItems(characterDetailsViewModel.lastResultsInfo)
         }
     }
 
     private fun setupToolbar() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
-        toolbar.navigationIcon?.setColorFilter(resources.getColor(R.color.colorWhite), PorterDuff.Mode.SRC_ATOP)
+        toolbar.navigationIcon?.setColorFilter(
+            ContextCompat.getColor(this, R.color.colorWhite),
+            PorterDuff.Mode.SRC_ATOP
+        )
         toolbar.setNavigationOnClickListener { finish() }
     }
 
     private fun setValues() {
         character.apply {
+            collapsingToolbar.title = handleStrings(name)
             txtCharacterResourceURI.text = handleStrings(resourceURI)
-            txtCharacterName.text = handleStrings(name)
             txtCharacterDescription.text = handleStrings(description)
-            chkFavorite.backgroundTintList =
-                if (isFavorite) ColorStateList.valueOf(resources.getColor(R.color.colorHeart)) else ColorStateList.valueOf(
-                    resources.getColor(R.color.colorBlack)
-                )
+            chkFavorite.isChecked = character.isFavorite
             chkFavorite.setOnClickListener {
                 character.isFavorite = !character.isFavorite
-                chkFavorite.backgroundTintList =
-                    if (character.isFavorite) ColorStateList.valueOf(resources.getColor(R.color.colorHeart)) else ColorStateList.valueOf(
-                        resources.getColor(R.color.colorBlack)
-                    )
                 characterDetailsViewModel.addRemoveFavorite(character)
                 val intent = Intent()
                 intent.putExtra(CharactersListActivity.CHARACTER_TAG, character)
@@ -107,48 +103,44 @@ class CharacterDetailsActivity : AppCompatActivity() {
                         response.data?.let {
                             if (it.isNotEmpty()) {
                                 characterDetailsAdapter.addItems(it)
-                                hideErrorContent()
-                                hideLoadingMoreInfo()
+                                showLoadingMoreInfo(false)
                             } else {
-                                showNoMoreInfoToLoad()
+                                showLoadingMoreInfo(false)
+                                hideMoreInfo()
                             }
                         }
                     }
                     Response.StatusEnum.ERROR -> {
-                        showErrorContent()
-                        hideLoadingMoreInfo()
+                        showFeedbackToUser(resources.getString(R.string.character_details_error))
+                        hideMoreInfo()
+                        showLoadingMoreInfo(false)
                     }
                 }
             }
         })
     }
 
-    private fun getCharacterMoreInfo() = characterDetailsViewModel.getDatasByCharacterId(character.id.toInt())
+    private fun showFeedbackToUser(message: String) =
+        Snackbar.make(container, message, Snackbar.LENGTH_LONG).apply {
+            setAction(
+                resources.getString(
+                    oliveira.fabio.marvelapp.R.string.snack_bar_hide
+                ), null
+            )
+            view.setBackgroundColor(ContextCompat.getColor(this@CharacterDetailsActivity, R.color.colorPrimaryDark))
+        }.show()
 
-    private fun showNoMoreInfoToLoad() {
-
+    private fun showLoadingMoreInfo(isLoading: Boolean) {
+        if (isLoading) {
+            progressBar.animate().setDuration(200).alpha(1f).start()
+        } else {
+            progressBar.animate().setDuration(200).alpha(0f).start()
+        }
     }
 
-    private fun hideNoMoreInfoToLoad() {
-
+    private fun hideMoreInfo() {
+        txtCharacterMoreInformationTitle.visibility = View.GONE
     }
-
-    private fun showErrorContent() {
-
-    }
-
-    private fun hideErrorContent() {
-
-    }
-
-    private fun showLoadingMoreInfo() {
-        progressBar.visibility = View.VISIBLE
-    }
-
-    private fun hideLoadingMoreInfo() {
-        progressBar.visibility = View.GONE
-    }
-
 
     private fun handleStrings(message: String) = if (message.isEmpty()) handledMessage else message
 

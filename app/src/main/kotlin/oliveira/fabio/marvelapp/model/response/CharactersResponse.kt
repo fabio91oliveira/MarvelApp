@@ -35,7 +35,6 @@ data class CharactersResponse(
             val thumbnail: Thumbnail,
             val urls: List<Url>
         ) : Parcelable {
-            fun getId() = id.toInt()
             @Parcelize
             data class Url(
                 val type: String,

@@ -2,21 +2,17 @@
     <string name="app_name">MarvelApp</string>
     <string name="snack_bar_hide">Hide</string>
 
-    <string name="error_dialog_network_error_description">An error has occurred</string>
-    <string name="error_dialog_try_again">Try Again</string>
+    <string name="error_network_error_description">An error has occurred. Click at Tab to try again!</string>
+    <string name="error_try_again">Error to load, click to try again</string>
 
-    <string name="characters_list_loading">Loading...</string>
+    <string name="characters_list_loading">Loading…</string>
     <string name="characters_list_has_been_loaded">The list has been loaded.</string>
     <string name="characters_list_no_more_results">There is no more results.</string>
+    <string name="character_details_error">An error has occurred to load.</string>
 
-    <plurals name="characters_list_name_has_been_found">
-        <item quantity="one">Only one result has been found.</item>
-        <item quantity="other">There are %s results.</item>
-    </plurals>
-
-    <string name="characters_list_name_no_results">No Results were found.</string>
-
-    <string name="character_details_comics_title">Comics</string>
+    <string name="character_details_resource_uri">Resource URI</string>
+    <string name="character_details_description">Description</string>
+    <string name="character_details_more_info">More Info About</string>
 
     <string name="characters_list_regular_list">Regular List</string>
     <string name="characters_list_favorite_list">Favorite List</string>

@@ -31,6 +31,8 @@ data class StoriesResponse(
             val title: String?,
             val type: String?
         ) {
+            fun getTitleFormatted() = if (title.isNullOrEmpty()) "" else title
+            fun getDescriptionFormatted() = if (description.isNullOrEmpty()) "" else description
             data class Originalissue(
                 val name: String?,
                 val resourceURI: String?

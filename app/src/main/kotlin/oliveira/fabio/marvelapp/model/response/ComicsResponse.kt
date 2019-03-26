@@ -47,6 +47,8 @@ data class ComicsResponse(
             val variantDescription: String?,
             val variants: List<Variant?>?
         ) {
+            fun getTitleFormatted() = if (title.isNullOrEmpty()) "" else title
+            fun getDescriptionFormatted() = if (description.isNullOrEmpty()) "" else description
             data class Characters(
                 val available: String?,
                 val collectionURI: String?,

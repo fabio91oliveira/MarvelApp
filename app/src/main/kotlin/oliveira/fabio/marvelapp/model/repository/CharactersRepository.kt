@@ -5,7 +5,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import oliveira.fabio.marvelapp.model.persistence.Character
 import oliveira.fabio.marvelapp.model.persistence.CharacterDao
-import oliveira.fabio.marvelapp.model.response.CharactersResponse
+import oliveira.fabio.marvelapp.model.response.*
 import oliveira.fabio.marvelapp.network.api.MarvelApi
 
 class CharactersRepository(private val marvelApi: MarvelApi, private val characterDao: CharacterDao) {
@@ -14,17 +14,21 @@ class CharactersRepository(private val marvelApi: MarvelApi, private val charact
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
 
-    fun getComics(characterId: Int) = marvelApi.getComics(characterId).subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
+    fun getComics(characterId: Int): Flowable<ComicsResponse> =
+        marvelApi.getComics(characterId).subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
 
-    fun getEvents(characterId: Int) = marvelApi.getEvents(characterId).subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
+    fun getEvents(characterId: Int): Flowable<EventsResponse> =
+        marvelApi.getEvents(characterId).subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
 
-    fun getSeries(characterId: Int) = marvelApi.getSeries(characterId).subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
+    fun getSeries(characterId: Int): Flowable<SeriesResponse> =
+        marvelApi.getSeries(characterId).subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
 
-    fun getStories(characterId: Int) = marvelApi.getStories(characterId).subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
+    fun getStories(characterId: Int): Flowable<StoriesResponse> =
+        marvelApi.getStories(characterId).subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
 
     fun addFavoriteCharacter(character: Character): Flowable<Long> {
         return Flowable.fromCallable { characterDao.addFavorite(character) }.subscribeOn(Schedulers.io())

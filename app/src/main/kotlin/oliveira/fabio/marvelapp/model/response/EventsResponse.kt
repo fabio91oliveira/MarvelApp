@@ -34,6 +34,8 @@ data class EventsResponse(
             val title: String?,
             val urls: List<Url?>?
         ) {
+            fun getTitleFormatted() = if (title.isNullOrEmpty()) "" else title
+            fun getDescriptionFormatted() = if (description.isNullOrEmpty()) "" else description
             data class Characters(
                 val available: String?,
                 val collectionURI: String?,
