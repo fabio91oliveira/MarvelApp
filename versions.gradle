@@ -15,6 +15,7 @@ versions.rxjava2 = "2.2.6"
 versions.rxandroid = "2.1.0"
 versions.glide = "4.8.0"
 versions.koin = "1.0.2"
+versions.coretesting = "2.0.1"
 versions.junit = "4.12"
 versions.requestmatcher = "2.2.0"
 versions.mockserver = "3.12.0"
@@ -77,6 +78,7 @@ deps.okhttp_logging_interceptor = "com.squareup.okhttp3:logging-interceptor:${ve
 deps.android_gradle_plugin = "com.android.tools.build:gradle:$versions.android_gradle_plugin"
 
 deps.junit = "junit:junit:$versions.junit"
+deps.coretesting = "androidx.arch.core:core-testing:$versions.coretesting"
 deps.requestmatcher = "br.com.concretesolutions:requestmatcher:$versions.requestmatcher"
 deps.mockserver = "com.squareup.okhttp3:mockwebserver:$versions.mockserver"
 

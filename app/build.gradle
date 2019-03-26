@@ -84,6 +84,7 @@ dependencies {
 
     // Tests
     testImplementation deps.junit
+    testImplementation deps.coretesting
     testImplementation deps.mockserver
     testImplementation deps.mockito.core
     testImplementation deps.requestmatcher
