@@ -30,15 +30,16 @@ class CharactersListRobot(
 
         private const val API_MARVEL_CHARACTER_DETAILS_COMICS_REQUEST = "/v1/public/characters/1017100/comics"
         private const val API_MARVEL_CHARACTER_DETAILS_COMICS_RESPONSE = "character_details_comics.json"
-        private const val API_MARVEL_CHARACTER_DETAILS_EVENTS_REQUEST = "/v1/public/characters/1017100/comics"
+        private const val API_MARVEL_CHARACTER_DETAILS_EVENTS_REQUEST = "/v1/public/characters/1017100/events"
         private const val API_MARVEL_CHARACTER_DETAILS_EVENTS_RESPONSE = "character_details_events.json"
-        private const val API_MARVEL_CHARACTER_DETAILS_SERIES_REQUEST = "/v1/public/characters/1017100/comics"
+        private const val API_MARVEL_CHARACTER_DETAILS_SERIES_REQUEST = "/v1/public/characters/1017100/series"
         private const val API_MARVEL_CHARACTER_DETAILS_SERIES_RESPONSE = "character_details_series.json"
-        private const val API_MARVEL_CHARACTER_DETAILS_STORIES_REQUEST = "/v1/public/characters/1017100/comics"
+        private const val API_MARVEL_CHARACTER_DETAILS_STORIES_REQUEST = "/v1/public/characters/1017100/stories"
         private const val API_MARVEL_CHARACTER_DETAILS_STORIES_RESPONSE = "character_details_stories.json"
 
         private const val CHARACTER_ID = "1017100"
         private const val PARAMETER_FOR_RESEARCH = "a"
+        private const val SERVER_ERROR_CODE = 500
     }
 
     val intent = Intent()
@@ -68,7 +69,7 @@ class CharactersListRobot(
     }
 
     fun setupCharactersListRequestError() {
-        server.addFixture(500, API_MARVEL_CHARACTERS_LIST_JSON_RESPONSE_NO_RESULT)
+        server.addFixture(SERVER_ERROR_CODE, API_MARVEL_CHARACTERS_LIST_JSON_RESPONSE_NO_RESULT)
             .ifRequestMatches()
             .pathIs(API_MARVEL_CHARACTERS_LIST_REQUEST)
     }
@@ -89,12 +90,6 @@ class CharactersListRobot(
         server.addFixture(API_MARVEL_CHARACTER_DETAILS_STORIES_RESPONSE)
             .ifRequestMatches()
             .pathIs(API_MARVEL_CHARACTER_DETAILS_STORIES_REQUEST)
-    }
-
-    fun setupSearchRequest() {
-        server.addFixture(API_MARVEL_CHARACTERS_LIST_REQUEST)
-            .ifRequestMatches()
-            .pathIs(API_MARVEL_CHARACTERS_LIST_JSON_RESPONSE)
     }
 
     fun shouldRecyclerViewDisplay() {
@@ -121,8 +116,7 @@ class CharactersListRobot(
     }
 
     fun shouldClickSearchButtonMenu() {
-        onView(withId(R.id.searchOpenButton))
-            .perform(click())
+        onView(withId(R.id.searchOpenButton)).check(matches(isDisplayed())).perform(click())
     }
 
     fun shouldTypeOnSearchViewInput() {

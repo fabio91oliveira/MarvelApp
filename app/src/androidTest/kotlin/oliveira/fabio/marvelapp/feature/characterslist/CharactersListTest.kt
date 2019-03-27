@@ -12,7 +12,7 @@ import org.junit.runner.RunWith
 import org.koin.standalone.StandAloneContext.loadKoinModules
 
 @RunWith(AndroidJUnit4::class)
-class CharacterListTest : BaseTest() {
+class CharactersListTest : BaseTest() {
 
     @Rule
     @JvmField
@@ -48,8 +48,8 @@ class CharacterListTest : BaseTest() {
         robots {
             initIntent()
             setupCharactersListRequest()
+            setupCharacterDetailsRequests()
             initActivity()
-//            setupCharacterDetailsRequests()
             shouldClickFirstItem()
             shouldCharacterDetailActivityOpen()
             releaseIntent()
@@ -60,7 +60,7 @@ class CharacterListTest : BaseTest() {
     fun shouldSearchByTextAndExistAtLeastOneItem() {
         robots {
             setupCharactersListRequest()
-            setupSearchRequest()
+            setupCharactersListRequest()
             initActivity()
             shouldClickSearchButtonMenu()
             shouldTypeOnSearchViewInput()

@@ -25,7 +25,6 @@ import oliveira.fabio.marvelapp.util.extensions.doRotateAnimation
 import oliveira.fabio.marvelapp.util.extensions.hideKeyboard
 import org.koin.android.viewmodel.ext.android.viewModel
 
-
 class CharactersListActivity : AppCompatActivity(), CharactersAdapter.OnClickCharacterListener, TextWatcher {
 
     private val charactersListViewModel: CharactersListViewModel by viewModel()
