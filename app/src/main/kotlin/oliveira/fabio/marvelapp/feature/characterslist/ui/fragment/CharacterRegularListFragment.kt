@@ -57,6 +57,7 @@ class CharacterRegularListFragment : Fragment(), CharactersAdapter.OnClickCharac
         if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE_UPDATE_FAVORITE) {
             val character = data?.getSerializableExtra(CHARACTER_TAG) as Character
             charactersAdapter.validateCharacterFavorite(character)
+            charactersListViewModel.addRemoveFavorite(character)
         }
     }
 
@@ -125,10 +126,11 @@ class CharacterRegularListFragment : Fragment(), CharactersAdapter.OnClickCharac
         activity?.searchViewToolbar?.closeSearch()
         infiniteScrollListener.clear()
         charactersListViewModel.getCharactersList()
+        goToFirstTab()
     }
 
     override fun onSearchClick() {
-        activity?.tabLayout?.getTabAt(TAB_REGULAR_LIST)?.select()
+        goToFirstTab()
     }
 
     override fun onDestroy() {
@@ -192,22 +194,6 @@ class CharacterRegularListFragment : Fragment(), CharactersAdapter.OnClickCharac
                 }
             }
         })
-//        charactersListViewModel.mutableLiveDataFavorites.observe(this, Observer { event ->
-//            event.getContentIfNotHandled()?.let { response ->
-//                if (response.statusEnum == Response.StatusEnum.SUCCESS) {
-//                    response.data?.run {
-//                        when (isNotEmpty()) {
-//                            true -> {
-//                                forEach { charactersAdapter.validateCharacterFavorite(it) }
-//                            }
-//                            else -> {
-//
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        })
     }
 
 
@@ -253,6 +239,8 @@ class CharacterRegularListFragment : Fragment(), CharactersAdapter.OnClickCharac
             }
             view.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimaryDark))
         }.show()
+
+    private fun goToFirstTab() = activity?.tabLayout?.getTabAt(TAB_REGULAR_LIST)?.select()
 
     private fun showContent() {
         rvCharactersRegularList.visibility = View.VISIBLE
