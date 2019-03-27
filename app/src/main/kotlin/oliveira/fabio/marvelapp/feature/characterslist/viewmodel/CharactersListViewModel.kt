@@ -41,7 +41,8 @@ class CharactersListViewModel(private val charactersRepository: CharactersReposi
             }.subscribe({
                 listOfAllFavorites.clear()
                 listOfAllFavorites.addAll(it.first)
-                validateFavoriteCharacters(it.second)
+                latestResults.clear()
+                latestResults.addAll(validateFavoriteCharacters(it.second))
                 mutableLiveDataResults.value = Event(Response.success(it.second))
                 mutableLiveDataFavorites.value = Event(Response.success(listOfAllFavorites))
             }, {
@@ -53,18 +54,23 @@ class CharactersListViewModel(private val charactersRepository: CharactersReposi
     fun getFavoritesList(character: Character? = null) {
         character?.let {
             refreshFavoritesList(character)
+            refreshLatestResults()
+            mutableLiveDataResults.value = Event(Response.success(latestResults))
         }
-
         mutableLiveDataFavorites.value = Event(Response.success(listOfAllFavorites))
     }
 
-    fun addRemoveFavorite(character: Character) {
+    fun addRemoveFavorite(character: Character, resetFirstTab: Boolean? = null) {
         compositeDisposable.add(
             if (findIdInFavoriteList(character.id)) {
                 charactersRepository.deleteFavorite(character)
                     .subscribe {
                         refreshFavoritesList(character)
                         mutableLiveDataFavorites.value = Event(Response.success(listOfAllFavorites))
+                        resetFirstTab?.apply {
+                            refreshLatestResults()
+                            mutableLiveDataResults.value = Event(Response.success(latestResults))
+                        }
                     }
             } else {
                 charactersRepository.addFavoriteCharacter(character)
@@ -108,10 +114,31 @@ class CharactersListViewModel(private val charactersRepository: CharactersReposi
         listOfAllFavorites.addAll(listOfAllFavoritesAux)
     }
 
-    private fun validateFavoriteCharacters(charactersList: MutableList<Character>) {
+    private fun refreshLatestResults() {
+        if (listOfAllFavorites.isEmpty()) {
+            latestResults.forEach { it.isFavorite = false }
+        } else {
+            val latestResultsAux by lazy { arrayListOf<Character>() }
+            listOfAllFavorites.forEach { favorite ->
+                latestResults.forEach { character ->
+                    if (favorite.id == character.id) {
+                        latestResultsAux.add(favorite)
+                    } else {
+                        latestResultsAux.add(character)
+                    }
+                }
+            }
+            latestResults.clear()
+            latestResults.addAll(latestResultsAux)
+        }
+    }
+
+    private fun validateFavoriteCharacters(charactersList: MutableList<Character>): MutableList<Character> {
         charactersList.forEach {
             it.isFavorite = findIdInFavoriteList(it.id)
         }
+
+        return charactersList
     }
 
     private fun findIdInFavoriteList(id: Long): Boolean {
