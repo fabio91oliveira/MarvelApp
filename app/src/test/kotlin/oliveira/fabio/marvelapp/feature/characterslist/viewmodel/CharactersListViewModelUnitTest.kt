@@ -42,19 +42,6 @@ class CharactersListViewModelUnitTest : KoinTest {
     }
 
     @Test
-    fun shouldRefreshFavoritesList() {
-        val characterList = createCharactersList()
-
-        Mockito.`when`(charactersRepository.getAllFavorites())
-            .then { Flowable.just(characterList) }
-
-//        charactersListViewModel.refreshFavoritesList()
-
-        Mockito.verify(charactersRepository).getAllFavorites()
-        Assert.assertEquals(characterList, charactersListViewModel.listOfAllFavorites)
-    }
-
-    @Test
     fun shouldGetCharactersListWithNoNameWithSuccess() {
         val characterList = createCharactersList()
         val limit = 20

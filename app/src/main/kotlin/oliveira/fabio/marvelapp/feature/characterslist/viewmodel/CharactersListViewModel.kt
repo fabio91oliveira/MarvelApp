@@ -19,7 +19,6 @@ class CharactersListViewModel(private val charactersRepository: CharactersReposi
     val mutableLiveDataFavorites by lazy { MutableLiveData<Event<Response<List<Character>>>>() }
     val listOfAllFavorites by lazy { arrayListOf<Character>() }
     val latestResults by lazy { mutableListOf<Character>() }
-    val favoritesHasChanged by lazy { MutableLiveData<Event<Boolean>>() }
 
     var isQuerySearch: Boolean = false
     var isFavoriteList = false
