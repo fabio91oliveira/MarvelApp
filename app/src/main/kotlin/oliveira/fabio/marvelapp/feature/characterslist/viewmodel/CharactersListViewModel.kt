@@ -50,7 +50,11 @@ class CharactersListViewModel(private val charactersRepository: CharactersReposi
         )
     }
 
-    fun getFavoritesList() {
+    fun getFavoritesList(character: Character? = null) {
+        character?.let {
+            refreshFavoritesList(character)
+        }
+
         mutableLiveDataFavorites.value = Event(Response.success(listOfAllFavorites))
     }
 

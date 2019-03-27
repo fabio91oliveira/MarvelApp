@@ -35,7 +35,7 @@ class CharacterFavoriteListFragment : Fragment(), CharactersAdapter.OnClickChara
         if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE_UPDATE_FAVORITE) {
             val character = data?.getSerializableExtra(CHARACTER_TAG) as Character
             charactersAdapter.validateCharacterFavorite(character)
-            charactersListViewModel.getFavoritesList()
+            charactersListViewModel.getFavoritesList(character)
         }
     }
 

@@ -31,9 +31,9 @@ class CharactersAdapter(private val onClickCharacterListener: OnClickCharacterLi
         results.forEach {
             if (it.id == character.id) {
                 it.isFavorite = character.isFavorite
-                notifyDataSetChanged()
             }
         }
+        notifyDataSetChanged()
     }
 
     fun clearResults() = results.clear()
