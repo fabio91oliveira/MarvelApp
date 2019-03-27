@@ -28,10 +28,10 @@ class CharacterDetailsViewModel(private val charactersRepository: CharactersRepo
     var isLoadedWithNoResults = false
 
     fun getDatasByCharacterId(characterId: Int) {
-        val source1 = charactersRepository.getComics(characterId, LIMIT)
-        val source2 = charactersRepository.getEvents(characterId, LIMIT)
-        val source3 = charactersRepository.getSeries(characterId, LIMIT)
-        val source4 = charactersRepository.getStories(characterId, LIMIT)
+        val source1 = charactersRepository.getComics(characterId, LIMIT, ORDER_BY)
+        val source2 = charactersRepository.getEvents(characterId, LIMIT, ORDER_BY)
+        val source3 = charactersRepository.getSeries(characterId, LIMIT, ORDER_BY)
+        val source4 = charactersRepository.getStories(characterId, LIMIT, ORDER_BY)
 
         compositeDisposable.add(
             Flowable.zip(
@@ -184,6 +184,7 @@ class CharacterDetailsViewModel(private val charactersRepository: CharactersRepo
 
     companion object {
         private const val LIMIT = 3
+        private const val ORDER_BY = "modified"
         private const val MIN_ITEMS = 1
         private const val COMICS_TAG = "Comics"
         private const val EVENTS_TAG = "Events"

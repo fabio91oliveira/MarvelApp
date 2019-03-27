@@ -11,14 +11,14 @@ interface MarvelApi {
     fun getCharacters(@Query("name") name: String?, @Query("limit") limit: Int, @Query("offset") offset: Int): Flowable<CharactersResponse>
 
     @GET("v1/public/characters/{characterId}/comics")
-    fun getComics(@Path("characterId") id: Int, @Query("limit") limit: Int): Flowable<ComicsResponse>
+    fun getComics(@Path("characterId") id: Int, @Query("limit") limit: Int, @Query("orderBy") orderBy: String): Flowable<ComicsResponse>
 
     @GET("v1/public/characters/{characterId}/events")
-    fun getEvents(@Path("characterId") id: Int, @Query("limit") limit: Int): Flowable<EventsResponse>
+    fun getEvents(@Path("characterId") id: Int, @Query("limit") limit: Int, @Query("orderBy") orderBy: String): Flowable<EventsResponse>
 
     @GET("v1/public/characters/{characterId}/stories")
-    fun getStories(@Path("characterId") id: Int, @Query("limit") limit: Int): Flowable<StoriesResponse>
+    fun getStories(@Path("characterId") id: Int, @Query("limit") limit: Int, @Query("orderBy") orderBy: String): Flowable<StoriesResponse>
 
     @GET("v1/public/characters/{characterId}/series")
-    fun getSeries(@Path("characterId") id: Int, @Query("limit") limit: Int): Flowable<SeriesResponse>
+    fun getSeries(@Path("characterId") id: Int, @Query("limit") limit: Int, @Query("orderBy") orderBy: String): Flowable<SeriesResponse>
 }
