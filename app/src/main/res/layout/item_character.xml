@@ -58,7 +58,7 @@
                 app:layout_constraintBottom_toBottomOf="@+id/txtCharacterName"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:background="@drawable/selector_favorite_button"
-                android:stateListAnimator="@animator/scale"
+                android:stateListAnimator="@null"
                 android:clickable="true"
                 android:button="@null"
                 android:checked="false"
