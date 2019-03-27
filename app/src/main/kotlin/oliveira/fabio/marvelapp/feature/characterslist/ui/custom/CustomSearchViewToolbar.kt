@@ -26,6 +26,7 @@ class CustomSearchViewToolbar(
 ) : ConstraintLayout(context, attrs) {
 
     private var isVisible = false
+    private var onClickListener: OnClickListener? = null
 
     override fun onSaveInstanceState(): Parcelable? {
         return Bundle().apply {
@@ -55,6 +56,7 @@ class CustomSearchViewToolbar(
     private fun initClickListeners() {
         searchOpenButton.setOnClickListener { openSearch() }
         searchBackButton.setOnClickListener { closeSearch() }
+        updateButton.setOnClickListener { onClickListener?.onUpdateClick() }
         searchEditText.setOnEditorActionListener(object : TextView.OnEditorActionListener {
             override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
@@ -83,6 +85,7 @@ class CustomSearchViewToolbar(
             circularReveal.duration = 300
             circularReveal.start()
         }
+        onClickListener?.onSearchClick()
     }
 
     fun closeSearch() {
@@ -123,6 +126,14 @@ class CustomSearchViewToolbar(
     }
 
     fun setTextWatcherListener(textWatcher: TextWatcher) = searchEditText.addTextChangedListener(textWatcher)
+    fun setOnClickListener(onClickListener: OnClickListener) {
+        this.onClickListener = onClickListener
+    }
 
     fun isVisible() = isVisible
+
+    interface OnClickListener {
+        fun onUpdateClick()
+        fun onSearchClick()
+    }
 }

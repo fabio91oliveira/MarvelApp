@@ -26,6 +26,7 @@
                     android:id="@+id/tabLayout"
                     android:background="@color/colorPrimary"
                     android:minHeight="?attr/actionBarSize"
+                    app:tabMode="scrollable"
                     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
             </com.google.android.material.tabs.TabLayout>
@@ -35,7 +36,7 @@
         <androidx.viewpager.widget.ViewPager
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="@id/appBarLayout"
+                app:layout_constraintTop_toBottomOf="@id/appBarLayout"
                 android:id="@+id/viewPager">
 
         </androidx.viewpager.widget.ViewPager>

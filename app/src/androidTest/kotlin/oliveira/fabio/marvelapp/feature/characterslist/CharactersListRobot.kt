@@ -93,7 +93,7 @@ class CharactersListRobot(
     }
 
     fun shouldRecyclerViewDisplay() {
-        onView(withId(R.id.rvCharactersList)).check(matches(isDisplayed()))
+        onView(withId(R.id.rvCharactersRegularList)).check(matches(isDisplayed()))
     }
 
     fun shouldShouldNoResultMessage() {
@@ -107,7 +107,7 @@ class CharactersListRobot(
     }
 
     fun shouldClickFirstItem() {
-        onView(withId(R.id.rvCharactersList))
+        onView(withId(R.id.rvCharactersRegularList))
             .perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(1, click()))
     }
 

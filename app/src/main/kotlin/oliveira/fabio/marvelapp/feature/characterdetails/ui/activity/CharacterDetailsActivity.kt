@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.activity_character_details.*
 import oliveira.fabio.marvelapp.R
 import oliveira.fabio.marvelapp.feature.characterdetails.ui.adapter.CharacterDetailsAdapter
 import oliveira.fabio.marvelapp.feature.characterdetails.viewmodel.CharacterDetailsViewModel
-import oliveira.fabio.marvelapp.feature.characterslist.ui.activity.CharactersListActivity
+import oliveira.fabio.marvelapp.feature.characterslist.ui.fragment.CharacterRegularListFragment
 import oliveira.fabio.marvelapp.model.persistence.Character
 import oliveira.fabio.marvelapp.util.Response
 import oliveira.fabio.marvelapp.util.extensions.loadImageByGlide
@@ -26,8 +26,8 @@ class CharacterDetailsActivity : AppCompatActivity() {
 
     private val characterDetailsViewModel: CharacterDetailsViewModel by viewModel()
     private val characterDetailsAdapter by lazy { CharacterDetailsAdapter() }
-    private val character by lazy { intent?.extras?.getSerializable(CharactersListActivity.CHARACTER_TAG) as Character }
-    private val listOfAllFavorites by lazy { intent?.extras?.getSerializable(CharactersListActivity.LIST_OF_FAVORITES_TAG) as ArrayList<Character> }
+    private val character by lazy { intent?.extras?.getSerializable(CharacterRegularListFragment.CHARACTER_TAG) as Character }
+    private val listOfAllFavorites by lazy { intent?.extras?.getSerializable(CharacterRegularListFragment.LIST_OF_FAVORITES_TAG) as ArrayList<Character> }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -90,7 +90,7 @@ class CharacterDetailsActivity : AppCompatActivity() {
                 character.isFavorite = !character.isFavorite
                 characterDetailsViewModel.addRemoveFavorite(character)
                 val intent = Intent()
-                intent.putExtra(CharactersListActivity.CHARACTER_TAG, character)
+                intent.putExtra(CharacterRegularListFragment.CHARACTER_TAG, character)
                 setResult(Activity.RESULT_OK, intent)
             }
             imgCharacter.loadImageByGlide(urlImage)

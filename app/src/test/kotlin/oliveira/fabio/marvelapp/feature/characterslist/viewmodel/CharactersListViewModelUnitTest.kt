@@ -48,7 +48,7 @@ class CharactersListViewModelUnitTest : KoinTest {
         Mockito.`when`(charactersRepository.getAllFavorites())
             .then { Flowable.just(characterList) }
 
-        charactersListViewModel.refreshFavoritesList()
+//        charactersListViewModel.refreshFavoritesList()
 
         Mockito.verify(charactersRepository).getAllFavorites()
         Assert.assertEquals(characterList, charactersListViewModel.listOfAllFavorites)

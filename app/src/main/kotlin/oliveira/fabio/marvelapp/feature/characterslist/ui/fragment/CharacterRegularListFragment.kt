@@ -3,6 +3,8 @@ package oliveira.fabio.marvelapp.feature.characterslist.ui.fragment
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,23 +14,29 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.fragment_regular_list.*
+import kotlinx.android.synthetic.main.activity_characters_list.*
+import kotlinx.android.synthetic.main.fragment_character_regular_list.*
 import oliveira.fabio.marvelapp.R
 import oliveira.fabio.marvelapp.feature.characterdetails.ui.activity.CharacterDetailsActivity
-import oliveira.fabio.marvelapp.feature.characterslist.ui.activity.CharactersListActivity
 import oliveira.fabio.marvelapp.feature.characterslist.ui.adapter.CharactersAdapter
+import oliveira.fabio.marvelapp.feature.characterslist.ui.custom.CustomSearchViewToolbar
 import oliveira.fabio.marvelapp.feature.characterslist.ui.listener.InfiniteScrollListener
 import oliveira.fabio.marvelapp.feature.characterslist.viewmodel.CharactersListViewModel
 import oliveira.fabio.marvelapp.model.persistence.Character
 import oliveira.fabio.marvelapp.util.Response
 import oliveira.fabio.marvelapp.util.extensions.doRotateAnimation
 import oliveira.fabio.marvelapp.util.extensions.hideKeyboard
-import org.koin.android.viewmodel.ext.android.viewModel
+import org.koin.android.viewmodel.ext.android.sharedViewModel
 
 
-class RegularListFragment : Fragment(), CharactersAdapter.OnClickCharacterListener {
+class CharacterRegularListFragment : Fragment(), CharactersAdapter.OnClickCharacterListener,
+    CustomSearchViewToolbar.OnClickListener, TextWatcher {
 
-    private val charactersListViewModel: CharactersListViewModel by viewModel()
+    private val charactersListViewModel: CharactersListViewModel by sharedViewModel()
+
+    private fun initSearchViewListener() = activity?.searchViewToolbar?.setTextWatcherListener(this)
+    private fun initSearchViewOnClickListener() = activity?.searchViewToolbar?.setOnClickListener(this)
+
     private val charactersAdapter by lazy { CharactersAdapter(this) }
     private val layoutManager by lazy { LinearLayoutManager(context, RecyclerView.VERTICAL, false) }
     private val infiniteScrollListener by lazy {
@@ -46,31 +54,81 @@ class RegularListFragment : Fragment(), CharactersAdapter.OnClickCharacterListen
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-
-        if (resultCode == Activity.RESULT_OK && requestCode == 200) {
-            val character = data?.getSerializableExtra(CharactersListActivity.CHARACTER_TAG) as Character
+        if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE_UPDATE_FAVORITE) {
+            val character = data?.getSerializableExtra(CHARACTER_TAG) as Character
             charactersAdapter.validateCharacterFavorite(character)
-            charactersListViewModel.refreshFavoritesList()
         }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_regular_list, container, false)
+        return inflater.inflate(R.layout.fragment_character_regular_list, container, false)
+    }
+
+//    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
+//        super.setUserVisibleHint(isVisibleToUser)
+//        if (!firstTimeToBeVisible) {
+//            if (isVisibleToUser) {
+//                charactersListViewModel.refreshFavoriteList()
+//            }
+//        }
+//    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        activity?.tabLayout?.selectedTabPosition?.let { outState.putInt(CURRENT_TAB, it) }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        init()
+        savedInstanceState?.let {
+            activity?.tabLayout?.getTabAt(it.getInt(CURRENT_TAB))?.select()
+            initLiveDatas()
+            initRecyclerView()
+            initSearchViewListener()
+            initSearchViewOnClickListener()
+        } ?: run {
+            init()
+            charactersListViewModel.offset = 33
+        }
     }
+
     override fun onLikeButtonClick(character: Character) {
         charactersListViewModel.addRemoveFavorite(character)
     }
 
     override fun onCharacterClick(character: Character) {
         val intent = Intent(activity, CharacterDetailsActivity::class.java)
-        intent.putExtra(CharactersListActivity.CHARACTER_TAG, character)
-        intent.putExtra(CharactersListActivity.LIST_OF_FAVORITES_TAG, charactersListViewModel.listOfAllFavorites)
-        startActivityForResult(intent, 200)
+        intent.putExtra(CHARACTER_TAG, character)
+        intent.putExtra(LIST_OF_FAVORITES_TAG, charactersListViewModel.listOfAllFavorites)
+        startActivityForResult(intent, REQUEST_CODE_UPDATE_FAVORITE)
+    }
+
+    override fun afterTextChanged(s: Editable?) {}
+
+    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+    override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+        if (s.isNotEmpty()) {
+            charactersListViewModel.isQuerySearch = true
+            charactersListViewModel.getCharactersList(s.toString())
+            activity?.searchViewToolbar?.loading(true)
+        }
+    }
+
+    override fun onUpdateClick() {
+        charactersListViewModel.offset = 0
+        charactersListViewModel.firstTime
+        clearList()
+        hideContent()
+        showLoading()
+        initRecyclerView()
+        activity?.searchViewToolbar?.closeSearch()
+        infiniteScrollListener.clear()
+        charactersListViewModel.getCharactersList()
+    }
+
+    override fun onSearchClick() {
+        activity?.tabLayout?.getTabAt(TAB_REGULAR_LIST)?.select()
     }
 
     override fun onDestroy() {
@@ -78,20 +136,13 @@ class RegularListFragment : Fragment(), CharactersAdapter.OnClickCharacterListen
         charactersListViewModel.onDestroy()
     }
 
-//    override fun onBackPressed() {
-//        when (searchViewToolbar.isVisible()) {
-//            true -> searchViewToolbar.closeSearch()
-//            false -> super.onBackPressed()
-//        }
-//    }
-
     private fun init() {
         hideContent()
         showLoading()
-//        setupTabLayout()
         initLiveDatas()
         initRecyclerView()
-//        initSearchViewListener()
+        initSearchViewListener()
+        initSearchViewOnClickListener()
         charactersListViewModel.getCharactersList()
     }
 
@@ -125,10 +176,10 @@ class RegularListFragment : Fragment(), CharactersAdapter.OnClickCharacterListen
                                     hideContent()
                                 }
                             }
-                            if (charactersListViewModel.firstTime) charactersListViewModel.firstTime = false
-//                            searchViewToolbar.loading(false)
+                            if (charactersListViewModel.firstTime) charactersListViewModel.firstTime =
+                                false
+                            activity?.searchViewToolbar?.loading(false)
                             hideLoading()
-
                         }
                     }
                     Response.StatusEnum.ERROR -> {
@@ -141,12 +192,28 @@ class RegularListFragment : Fragment(), CharactersAdapter.OnClickCharacterListen
                 }
             }
         })
+//        charactersListViewModel.mutableLiveDataFavorites.observe(this, Observer { event ->
+//            event.getContentIfNotHandled()?.let { response ->
+//                if (response.statusEnum == Response.StatusEnum.SUCCESS) {
+//                    response.data?.run {
+//                        when (isNotEmpty()) {
+//                            true -> {
+//                                forEach { charactersAdapter.validateCharacterFavorite(it) }
+//                            }
+//                            else -> {
+//
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        })
     }
 
 
     private fun initRecyclerView() {
-        if (rvCharactersList.layoutManager == null) rvCharactersList.layoutManager = layoutManager
-        if (rvCharactersList.adapter == null) rvCharactersList.adapter = charactersAdapter
+        if (rvCharactersRegularList.layoutManager == null) rvCharactersRegularList.layoutManager = layoutManager
+        if (rvCharactersRegularList.adapter == null) rvCharactersRegularList.adapter = charactersAdapter
         startInfiniteScroll()
 
         if (charactersListViewModel.latestResults.isNotEmpty()) {
@@ -167,7 +234,7 @@ class RegularListFragment : Fragment(), CharactersAdapter.OnClickCharacterListen
     }
 
     private fun addResults(character: List<Character>) = charactersAdapter.addResults(character)
-    private fun startInfiniteScroll() = rvCharactersList.addOnScrollListener(infiniteScrollListener)
+    private fun startInfiniteScroll() = rvCharactersRegularList.addOnScrollListener(infiniteScrollListener)
 
     private fun showFeedbackToUser(message: String, shortTime: Boolean, listener: View.OnClickListener? = null) =
         Snackbar.make(container, message, if (shortTime) Snackbar.LENGTH_SHORT else Snackbar.LENGTH_LONG).apply {
@@ -188,11 +255,11 @@ class RegularListFragment : Fragment(), CharactersAdapter.OnClickCharacterListen
         }.show()
 
     private fun showContent() {
-        rvCharactersList.visibility = View.VISIBLE
+        rvCharactersRegularList.visibility = View.VISIBLE
     }
 
     private fun hideContent() {
-        rvCharactersList.visibility = View.GONE
+        rvCharactersRegularList.visibility = View.GONE
     }
 
     private fun showLoading() {
@@ -211,6 +278,7 @@ class RegularListFragment : Fragment(), CharactersAdapter.OnClickCharacterListen
         const val LIST_OF_FAVORITES_TAG = "LIST_OF_FAVORITES"
         private const val CURRENT_TAB = "CURRENT_TAB"
         private const val REQUEST_CODE_UPDATE_FAVORITE = 200
+        private const val TAB_REGULAR_LIST = 0
     }
 
 }
