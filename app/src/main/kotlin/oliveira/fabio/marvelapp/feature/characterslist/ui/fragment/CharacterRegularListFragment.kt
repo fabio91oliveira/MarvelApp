@@ -65,15 +65,6 @@ class CharacterRegularListFragment : Fragment(), CharactersAdapter.OnClickCharac
         return inflater.inflate(R.layout.fragment_character_regular_list, container, false)
     }
 
-//    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
-//        super.setUserVisibleHint(isVisibleToUser)
-//        if (!firstTimeToBeVisible) {
-//            if (isVisibleToUser) {
-//                charactersListViewModel.refreshFavoriteList()
-//            }
-//        }
-//    }
-
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         activity?.tabLayout?.selectedTabPosition?.let { outState.putInt(CURRENT_TAB, it) }
@@ -89,7 +80,6 @@ class CharacterRegularListFragment : Fragment(), CharactersAdapter.OnClickCharac
             initSearchViewOnClickListener()
         } ?: run {
             init()
-            charactersListViewModel.offset = 33
         }
     }
 
@@ -119,6 +109,7 @@ class CharacterRegularListFragment : Fragment(), CharactersAdapter.OnClickCharac
     override fun onUpdateClick() {
         charactersListViewModel.offset = 0
         charactersListViewModel.firstTime
+        charactersListViewModel.isQuerySearch = false
         clearList()
         hideContent()
         showLoading()

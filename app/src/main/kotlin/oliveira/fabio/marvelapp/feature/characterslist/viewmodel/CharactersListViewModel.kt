@@ -59,7 +59,7 @@ class CharactersListViewModel(private val charactersRepository: CharactersReposi
             if (findIdInFavoriteList(character.id)) {
                 charactersRepository.deleteFavorite(character)
                     .subscribe {
-                        refreshRemoveFavoritesList(character)
+                        refreshFavoritesList(character)
                         mutableLiveDataFavorites.value = Event(Response.success(listOfAllFavorites))
                     }
             } else {
@@ -93,7 +93,7 @@ class CharactersListViewModel(private val charactersRepository: CharactersReposi
         return charactersList
     }
 
-    private fun refreshRemoveFavoritesList(character: Character) {
+    private fun refreshFavoritesList(character: Character) {
         val listOfAllFavoritesAux by lazy { arrayListOf<Character>() }
         listOfAllFavorites.forEach {
             if (it.id != character.id) {
