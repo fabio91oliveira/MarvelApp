@@ -79,6 +79,12 @@ class CharacterRegularListFragment : Fragment(), CharactersAdapter.OnClickCharac
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        charactersListViewModel.changeToRegularListPageType()
+    }
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         savedInstanceState?.let {
@@ -160,7 +166,9 @@ class CharacterRegularListFragment : Fragment(), CharactersAdapter.OnClickCharac
                                 true -> {
                                     hideNoResultsMessage()
                                     if (charactersListViewModel.isQuerySearch) clearList()
-                                    if (charactersListViewModel.isFavoriteListPageType()) charactersAdapter.clearResults()
+                                    if (charactersListViewModel.isFavoriteListPageType()) {
+                                        charactersAdapter.clearResults()
+                                    }
                                     addResults(this)
                                     showContent()
                                     if (charactersListViewModel.firstTime.not()) {
@@ -190,7 +198,7 @@ class CharacterRegularListFragment : Fragment(), CharactersAdapter.OnClickCharac
                     }
                     Response.StatusEnum.ERROR -> {
                         hideLoading()
-                        hideContent()
+//                        hideContent()
                         showFeedbackToUser(
                             resources.getString(R.string.characters_list_error_network_error_description),
                             false
@@ -255,6 +263,7 @@ class CharacterRegularListFragment : Fragment(), CharactersAdapter.OnClickCharac
     private fun hideContent() {
         rvCharactersRegularList.visibility = View.GONE
     }
+
 
     private fun showLoading() {
         loading.doRotateAnimation()

@@ -45,6 +45,11 @@ class CharacterFavoriteListFragment : Fragment(), CharactersAdapter.OnClickChara
         return inflater.inflate(R.layout.fragment_character_favorite_list, container, false)
     }
 
+    override fun onResume() {
+        super.onResume()
+        charactersListViewModel.changeToFavoriteListPageType()
+    }
+
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)
         if (!isFirstTimeAtThisScreen && isVisibleToUser) {
@@ -60,7 +65,6 @@ class CharacterFavoriteListFragment : Fragment(), CharactersAdapter.OnClickChara
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         savedInstanceState?.let {
-            activity?.tabLayout?.getTabAt(it.getInt(CURRENT_TAB))?.select()
             initLiveDatas()
             initRecyclerView()
             charactersListViewModel.getFavoritesList()
