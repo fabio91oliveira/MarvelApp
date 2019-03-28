@@ -36,7 +36,10 @@ class CharactersAdapter(private val onClickCharacterListener: OnClickCharacterLi
         notifyDataSetChanged()
     }
 
-    fun clearResults() = results.clear()
+    fun clearResults() {
+        results.clear()
+        notifyDataSetChanged()
+    }
 
     inner class ItemViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView),
         LayoutContainer {

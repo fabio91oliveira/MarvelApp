@@ -37,13 +37,15 @@ class CharacterRegularListFragment : Fragment(), CharactersAdapter.OnClickCharac
     private fun initSearchViewListener() = activity?.searchViewToolbar?.setTextWatcherListener(this)
     private fun initSearchViewOnClickListener() = activity?.searchViewToolbar?.setOnClickListener(this)
 
+    private var isFirstTimeAtThisScreen = true
+
     private val charactersAdapter by lazy { CharactersAdapter(this) }
     private val layoutManager by lazy { LinearLayoutManager(context, RecyclerView.VERTICAL, false) }
     private val infiniteScrollListener by lazy {
         object :
             InfiniteScrollListener(layoutManager, charactersListViewModel.offset) {
             override fun onLoadMore(totalLatestResult: Int) {
-                if (!charactersListViewModel.isQuerySearch && !charactersListViewModel.isFavoriteList) {
+                if (!charactersListViewModel.isQuerySearch && !charactersListViewModel.isFavoriteListPageType()) {
                     showFeedbackToUser(resources.getString(R.string.characters_list_loading), false)
                     setLatestTotalResult(totalLatestResult)
                     charactersListViewModel.getCharactersList()
@@ -68,6 +70,13 @@ class CharacterRegularListFragment : Fragment(), CharactersAdapter.OnClickCharac
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         activity?.tabLayout?.selectedTabPosition?.let { outState.putInt(CURRENT_TAB, it) }
+    }
+
+    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
+        super.setUserVisibleHint(isVisibleToUser)
+        if (!isFirstTimeAtThisScreen && isVisibleToUser) {
+            charactersListViewModel.changeToRegularListPageType()
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -137,6 +146,7 @@ class CharacterRegularListFragment : Fragment(), CharactersAdapter.OnClickCharac
         initSearchViewListener()
         initSearchViewOnClickListener()
         charactersListViewModel.getCharactersList()
+        isFirstTimeAtThisScreen = false
     }
 
     private fun initLiveDatas() {
@@ -148,7 +158,7 @@ class CharacterRegularListFragment : Fragment(), CharactersAdapter.OnClickCharac
                             when (isNotEmpty()) {
                                 true -> {
                                     if (charactersListViewModel.isQuerySearch) clearList()
-                                    charactersListViewModel.latestResults.addAll(this)
+                                    if (charactersListViewModel.isFavoriteListPageType()) charactersAdapter.clearResults()
                                     addResults(this)
                                     showContent()
                                     if (charactersListViewModel.firstTime.not()) {
@@ -189,18 +199,19 @@ class CharacterRegularListFragment : Fragment(), CharactersAdapter.OnClickCharac
 
 
     private fun initRecyclerView() {
-        if (rvCharactersRegularList.layoutManager == null) rvCharactersRegularList.layoutManager = layoutManager
-        if (rvCharactersRegularList.adapter == null) rvCharactersRegularList.adapter = charactersAdapter
+        rvCharactersRegularList.layoutManager = layoutManager
+        rvCharactersRegularList.adapter = charactersAdapter
         startInfiniteScroll()
 
-        if (charactersListViewModel.latestResults.isNotEmpty()) {
-            addResults(charactersListViewModel.latestResults)
+        if (charactersListViewModel.listOfAllResults.isNotEmpty()) {
+            addResults(charactersListViewModel.listOfAllResults)
             showContent()
         }
     }
 
     private fun clearList() {
         charactersListViewModel.latestResults.clear()
+        charactersListViewModel.listOfAllResults.clear()
         charactersListViewModel.offset = 0
         charactersAdapter.clearResults()
         charactersAdapter.notifyDataSetChanged()

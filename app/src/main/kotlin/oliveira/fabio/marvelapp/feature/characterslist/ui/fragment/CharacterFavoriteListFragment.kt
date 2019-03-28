@@ -29,6 +29,8 @@ class CharacterFavoriteListFragment : Fragment(), CharactersAdapter.OnClickChara
     private val charactersAdapter by lazy { CharactersAdapter(this) }
     private val layoutManager by lazy { LinearLayoutManager(context, RecyclerView.VERTICAL, false) }
 
+    private var isFirstTimeAtThisScreen = true
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -43,6 +45,12 @@ class CharacterFavoriteListFragment : Fragment(), CharactersAdapter.OnClickChara
         return inflater.inflate(R.layout.fragment_character_favorite_list, container, false)
     }
 
+    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
+        super.setUserVisibleHint(isVisibleToUser)
+        if (!isFirstTimeAtThisScreen && isVisibleToUser) {
+            charactersListViewModel.changeToFavoriteListPageType()
+        }
+    }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -81,6 +89,7 @@ class CharacterFavoriteListFragment : Fragment(), CharactersAdapter.OnClickChara
         hideContent()
         initLiveDatas()
         initRecyclerView()
+        isFirstTimeAtThisScreen = false
     }
 
     private fun initLiveDatas() {
@@ -92,7 +101,6 @@ class CharacterFavoriteListFragment : Fragment(), CharactersAdapter.OnClickChara
                             when (isNotEmpty()) {
                                 true -> {
                                     if (charactersListViewModel.isQuerySearch) clearList()
-                                    charactersListViewModel.latestResults.addAll(this)
                                     addResults(this)
                                     showContent()
                                 }

@@ -18,15 +18,15 @@ class CharactersListViewModel(private val charactersRepository: CharactersReposi
     val mutableLiveDataResults by lazy { MutableLiveData<Event<Response<List<Character>>>>() }
     val mutableLiveDataFavorites by lazy { MutableLiveData<Event<Response<List<Character>>>>() }
     val listOfAllFavorites by lazy { arrayListOf<Character>() }
+    val listOfAllResults by lazy { mutableListOf<Character>() }
     val latestResults by lazy { mutableListOf<Character>() }
 
     var isQuerySearch: Boolean = false
-    var isFavoriteList = false
-    var offset = 0
+    var offset = INITIAL_VALUE
     var firstTime = true
+    private var pageType = REGULAR_LIST
 
     fun getCharactersList(name: String? = null) {
-        isFavoriteList = false
         val source1 = charactersRepository.getAllFavorites()
         val source2 = charactersRepository.getCharacters(LIMIT_PER_PAGE, offset, name)
 
@@ -43,6 +43,7 @@ class CharactersListViewModel(private val charactersRepository: CharactersReposi
                 listOfAllFavorites.addAll(it.first)
                 latestResults.clear()
                 latestResults.addAll(validateFavoriteCharacters(it.second))
+                listOfAllResults.addAll(validateFavoriteCharacters(it.second))
                 mutableLiveDataResults.value = Event(Response.success(it.second))
                 mutableLiveDataFavorites.value = Event(Response.success(listOfAllFavorites))
             }, {
@@ -85,6 +86,16 @@ class CharactersListViewModel(private val charactersRepository: CharactersReposi
 
     fun onDestroy() = compositeDisposable.takeIf { it.isDisposed }?.run { dispose() }
 
+    fun changeToRegularListPageType() {
+        pageType = REGULAR_LIST
+    }
+
+    fun changeToFavoriteListPageType() {
+        pageType = FAVORITE_LIST
+    }
+
+    fun isFavoriteListPageType() = pageType == FAVORITE_LIST
+
     private fun parseToCharacterList(data: CharactersResponse.Data): MutableList<Character> {
         val charactersList = mutableListOf<Character>()
         latestData = data
@@ -118,18 +129,12 @@ class CharactersListViewModel(private val charactersRepository: CharactersReposi
         if (listOfAllFavorites.isEmpty()) {
             latestResults.forEach { it.isFavorite = false }
         } else {
-            val latestResultsAux by lazy { arrayListOf<Character>() }
             listOfAllFavorites.forEach { favorite ->
                 latestResults.forEach { character ->
-                    if (favorite.id == character.id) {
-                        latestResultsAux.add(favorite)
-                    } else {
-                        latestResultsAux.add(character)
-                    }
+                    character.isFavorite = favorite.id == character.id
                 }
             }
-            latestResults.clear()
-            latestResults.addAll(latestResultsAux)
+
         }
     }
 
@@ -152,5 +157,8 @@ class CharactersListViewModel(private val charactersRepository: CharactersReposi
 
     companion object {
         private const val LIMIT_PER_PAGE = 20
+        const val INITIAL_VALUE = 0
+        const val REGULAR_LIST = 0
+        const val FAVORITE_LIST = 1
     }
 }
