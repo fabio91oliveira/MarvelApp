@@ -6,7 +6,8 @@
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:layout_width="match_parent"
-        android:layout_height="?actionBarSize">
+        android:layout_height="?actionBarSize"
+        android:background="@color/colorPrimaryDark">
 
     <View
             android:id="@+id/updateButton"
@@ -34,7 +35,13 @@
             android:id="@+id/searchOpenView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/colorWhite"
+            android:layout_marginTop="@dimen/margin_six"
+            android:layout_marginBottom="@dimen/margin_six"
+            android:layout_marginStart="@dimen/margin_six"
+            android:layout_marginLeft="@dimen/margin_six"
+            android:layout_marginEnd="@dimen/margin_six"
+            android:layout_marginRight="@dimen/margin_six"
+            android:background="@drawable/background_round"
             android:visibility="invisible">
 
         <View

@@ -85,7 +85,6 @@ class CustomSearchViewToolbar(
             circularReveal.duration = 300
             circularReveal.start()
         }
-        onClickListener?.onSearchClick()
     }
 
     fun closeSearch() {
@@ -134,6 +133,5 @@ class CustomSearchViewToolbar(
 
     interface OnClickListener {
         fun onUpdateClick()
-        fun onSearchClick()
     }
 }

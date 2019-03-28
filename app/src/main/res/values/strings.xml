@@ -7,7 +7,9 @@
 
     <string name="characters_list_loading">Loading…</string>
     <string name="characters_list_has_been_loaded">The list has been loaded.</string>
-    <string name="characters_list_no_results">There is no results to show.</string>
+    <string name="characters_list_no_results">There are no results to show.</string>
+    <string name="characters_list_search_no_results">There are no results. \nClick here to reset the list.</string>
+    <string name="characters_list_no_favorites">There are no favorites yet.</string>
     <string name="characters_list_no_more_results">There is no more results.</string>
     <string name="character_details_error">An error has occurred to load.</string>
 

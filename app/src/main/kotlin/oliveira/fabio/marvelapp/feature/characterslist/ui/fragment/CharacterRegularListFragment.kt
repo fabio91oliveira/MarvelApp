@@ -74,6 +74,7 @@ class CharacterRegularListFragment : Fragment(), CharactersAdapter.OnClickCharac
         savedInstanceState?.let {
             initLiveDatas()
             initRecyclerView()
+            initClickListener()
             initSearchViewListener()
             initSearchViewOnClickListener()
         } ?: run {
@@ -104,24 +105,7 @@ class CharacterRegularListFragment : Fragment(), CharactersAdapter.OnClickCharac
         }
     }
 
-    override fun onUpdateClick() {
-        charactersListViewModel.offset = 0
-        charactersListViewModel.firstTime
-        charactersListViewModel.isQuerySearch = false
-        clearList()
-        hideContent()
-        hideNoResultsMessage()
-        showLoading()
-        initRecyclerView()
-        activity?.searchViewToolbar?.closeSearch()
-        infiniteScrollListener.clear()
-        charactersListViewModel.getCharactersList()
-        goToFirstTab()
-    }
-
-    override fun onSearchClick() {
-        goToFirstTab()
-    }
+    override fun onUpdateClick() = refreshList()
 
     override fun onDestroy() {
         super.onDestroy()
@@ -133,9 +117,15 @@ class CharacterRegularListFragment : Fragment(), CharactersAdapter.OnClickCharac
         showLoading()
         initLiveDatas()
         initRecyclerView()
+        initClickListener()
         initSearchViewListener()
         initSearchViewOnClickListener()
         charactersListViewModel.getCharactersList()
+    }
+
+    private fun initClickListener() {
+        imgNoResults.setOnClickListener { refreshList() }
+        txtNoResults.setOnClickListener { refreshList() }
     }
 
     private fun initLiveDatas() {
@@ -221,8 +211,23 @@ class CharacterRegularListFragment : Fragment(), CharactersAdapter.OnClickCharac
     private fun showFeedbackToUser(message: String, shortTime: Boolean) =
         Toast.makeText(context, message, if (shortTime) Toast.LENGTH_SHORT else Toast.LENGTH_LONG).show()
 
-    private fun goToFirstTab(): Unit? {
-        return activity?.navigation?.setSelectedItemId(TAB_REGULAR_LIST)
+    private fun refreshList() {
+        charactersListViewModel.offset = 0
+        charactersListViewModel.firstTime
+        charactersListViewModel.isQuerySearch = false
+        clearList()
+        hideContent()
+        hideNoResultsMessage()
+        showLoading()
+        initRecyclerView()
+        activity?.searchViewToolbar?.closeSearch()
+        infiniteScrollListener.clear()
+        charactersListViewModel.getCharactersList()
+        goToFirstTab()
+    }
+
+    private fun goToFirstTab() {
+        activity?.navigation?.selectedItemId = TAB_REGULAR_LIST
     }
 
     private fun showContent() {
@@ -232,7 +237,6 @@ class CharacterRegularListFragment : Fragment(), CharactersAdapter.OnClickCharac
     private fun hideContent() {
         rvCharactersRegularList.visibility = View.GONE
     }
-
 
     private fun showLoading() {
         loading.doRotateAnimation()
@@ -246,17 +250,16 @@ class CharacterRegularListFragment : Fragment(), CharactersAdapter.OnClickCharac
     }
 
     private fun showNoResultsMessage() {
-        txtNoResults.visibility = View.VISIBLE
+        grpNotFound.visibility = View.VISIBLE
     }
 
     private fun hideNoResultsMessage() {
-        txtNoResults.visibility = View.GONE
+        grpNotFound.visibility = View.GONE
     }
 
     companion object {
         const val CHARACTER_TAG = "CHARACTER"
         const val LIST_OF_FAVORITES_TAG = "LIST_OF_FAVORITES"
-        private const val CURRENT_TAB = "CURRENT_TAB"
         private const val REQUEST_CODE_UPDATE_FAVORITE = 200
         private const val TAB_REGULAR_LIST = R.id.action_regular_list
 

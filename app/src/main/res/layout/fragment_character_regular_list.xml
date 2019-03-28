@@ -15,17 +15,39 @@
             tools:listitem="@layout/item_character"
             tools:visibility="gone"/>
 
-    <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/txtNoResults"
+    <androidx.constraintlayout.widget.Group
+            android:id="@+id/grpNotFound"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorWhite"
-            android:visibility="gone"
-            android:text="@string/characters_list_no_results"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:constraint_referenced_ids="imgNoResults,txtNoResults"
+            android:visibility="gone"/>
+
+    <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imgNoResults"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_not_found"
+            android:layout_marginTop="@dimen/margin_forty"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/txtNoResults"
+            android:textAlignment="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorSoftGreyTransparent"
+            android:visibility="visible"
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            android:text="@string/characters_list_search_no_results"
+            android:layout_marginTop="@dimen/margin_sixteen"
+            app:layout_constraintEnd_toEndOf="@id/imgNoResults"
+            app:layout_constraintStart_toStartOf="@id/imgNoResults"
+            app:layout_constraintTop_toBottomOf="@+id/imgNoResults"
+            tools:visibility="visible"/>
 
     <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/loading"

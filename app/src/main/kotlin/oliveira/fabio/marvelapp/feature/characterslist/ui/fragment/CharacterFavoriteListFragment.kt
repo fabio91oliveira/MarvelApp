@@ -91,8 +91,10 @@ class CharacterFavoriteListFragment : Fragment(), CharactersAdapter.OnClickChara
                                     if (charactersListViewModel.isQuerySearch) clearList()
                                     addResults(this)
                                     showContent()
+                                    hideNoFavorites()
                                 }
                                 else -> {
+                                    showNoFavorites()
                                     hideContent()
                                 }
                             }
@@ -148,11 +150,17 @@ class CharacterFavoriteListFragment : Fragment(), CharactersAdapter.OnClickChara
         activity?.rvCharactersFavoriteList?.visibility = View.GONE
     }
 
+    private fun showNoFavorites() {
+        grpNoFavorites.visibility = View.VISIBLE
+    }
+
+    private fun hideNoFavorites() {
+        grpNoFavorites.visibility = View.GONE
+    }
 
     companion object {
         const val CHARACTER_TAG = "CHARACTER"
         const val LIST_OF_FAVORITES_TAG = "LIST_OF_FAVORITES"
-        private const val CURRENT_TAB = "CURRENT_TAB"
         private const val REQUEST_CODE_UPDATE_FAVORITE = 200
 
         fun newInstance(): CharacterFavoriteListFragment {
