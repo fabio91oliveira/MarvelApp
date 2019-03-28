@@ -58,7 +58,7 @@ class CharacterFavoriteListFragment : Fragment(), CharactersAdapter.OnClickChara
         }
     }
 
-    override fun onLikeButtonClick(character: Character) {
+    override fun onFavoriteButtonClick(character: Character) {
         charactersListViewModel.addRemoveFavorite(character, true)
     }
 

@@ -49,7 +49,7 @@
                 app:layout_constraintStart_toStartOf="@id/txtNameTitle"
                 app:layout_constraintEnd_toEndOf="@id/txtNameTitle"
                 app:layout_constraintTop_toBottomOf="@id/txtNameTitle"
-                android:textColor="@color/colorWhite"
+                android:textColor="@color/colorSoftGrey"
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:text="@string/info_name_value"/>
@@ -90,7 +90,7 @@
                 app:layout_constraintStart_toStartOf="@id/txtAgeTitle"
                 app:layout_constraintEnd_toEndOf="@id/txtAgeTitle"
                 app:layout_constraintTop_toBottomOf="@id/txtAgeTitle"
-                android:textColor="@color/colorWhite"
+                android:textColor="@color/colorSoftGrey"
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:text="@string/info_age_value"/>
@@ -131,7 +131,7 @@
                 app:layout_constraintStart_toStartOf="@id/txtEmailTitle"
                 app:layout_constraintEnd_toEndOf="@id/txtEmailTitle"
                 app:layout_constraintTop_toBottomOf="@id/txtEmailTitle"
-                android:textColor="@color/colorWhite"
+                android:textColor="@color/colorSoftGrey"
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:text="@string/info_email_value"/>
@@ -145,6 +145,37 @@
                 app:layout_constraintTop_toBottomOf="@id/txtEmail"
                 app:layout_constraintStart_toStartOf="@id/txtEmail"
                 app:layout_constraintEnd_toEndOf="@id/txtEmail"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/txtPhoneTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_sixteen"
+                android:textStyle="bold"
+                android:textAllCaps="true"
+                android:text="@string/info_phone"
+                android:layout_marginStart="@dimen/margin_sixteen"
+                android:layout_marginLeft="@dimen/margin_sixteen"
+                android:layout_marginEnd="@dimen/margin_sixteen"
+                android:layout_marginRight="@dimen/margin_sixteen"
+                android:textColor="@color/colorSofterGrey"
+                android:layout_marginTop="@dimen/margin_sixteen"
+                app:layout_constraintTop_toBottomOf="@id/viewLineThird"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/txtPhone"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_twelve"
+                app:layout_constraintStart_toStartOf="@id/txtPhoneTitle"
+                app:layout_constraintEnd_toEndOf="@id/txtPhoneTitle"
+                app:layout_constraintTop_toBottomOf="@id/txtPhoneTitle"
+                android:textColor="@color/colorSoftGrey"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="@string/info_phone_value"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

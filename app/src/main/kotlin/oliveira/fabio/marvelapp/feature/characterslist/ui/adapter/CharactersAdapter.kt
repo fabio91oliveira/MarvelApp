@@ -52,7 +52,7 @@ class CharactersAdapter(private val onClickCharacterListener: OnClickCharacterLi
                 containerView.setOnClickListener { onClickCharacterListener.onCharacterClick(this) }
                 chkFavorite.setOnClickListener {
                     character.isFavorite = chkFavorite.isChecked
-                    onClickCharacterListener.onLikeButtonClick(character)
+                    onClickCharacterListener.onFavoriteButtonClick(character)
                 }
             }
         }
@@ -60,6 +60,6 @@ class CharactersAdapter(private val onClickCharacterListener: OnClickCharacterLi
 
     interface OnClickCharacterListener {
         fun onCharacterClick(character: Character)
-        fun onLikeButtonClick(character: Character)
+        fun onFavoriteButtonClick(character: Character)
     }
 }

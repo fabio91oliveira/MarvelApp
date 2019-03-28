@@ -7,6 +7,8 @@
 
     <string name="characters_list_loading">Loading…</string>
     <string name="characters_list_has_been_loaded">The list has been loaded.</string>
+    <string name="characters_list_added_to_favorite">Character has been added to favorite.</string>
+    <string name="characters_list_removed_to_favorite">Character has been removed from favorite.</string>
     <string name="characters_list_no_results">There are no results to show.</string>
     <string name="characters_list_search_no_results">There are no results. \nClick here to reset the list.</string>
     <string name="characters_list_no_favorites">There are no favorites yet.</string>
@@ -27,4 +29,6 @@
     <string name="info_age_value">27</string>
     <string name="info_email">E-mail</string>
     <string name="info_email_value">fabio91oliveira@gmail.com</string>
+    <string name="info_phone">Phone</string>
+    <string name="info_phone_value">+55 (21) 98191–4951</string>
 </resources>

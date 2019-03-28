@@ -82,8 +82,12 @@ class CharacterRegularListFragment : Fragment(), CharactersAdapter.OnClickCharac
         }
     }
 
-    override fun onLikeButtonClick(character: Character) {
+    override fun onFavoriteButtonClick(character: Character) {
         charactersListViewModel.addRemoveFavorite(character)
+        when (character.isFavorite) {
+            true -> showFeedbackToUser(resources.getString(R.string.characters_list_added_to_favorite), true)
+            false -> showFeedbackToUser(resources.getString(R.string.characters_list_removed_to_favorite), true)
+        }
     }
 
     override fun onCharacterClick(character: Character) {

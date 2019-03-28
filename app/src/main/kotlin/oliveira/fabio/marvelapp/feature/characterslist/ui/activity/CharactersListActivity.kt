@@ -44,23 +44,23 @@ class CharactersListActivity : AppCompatActivity(), BottomNavigationView.OnNavig
                 supportFragmentManager.beginTransaction().addToBackStack(null).hide(characterFavoriteListFragment)
                     .hide(infoFragment).show(characterRegularListFragment).commit()
                 characterRegularListFragment.onResume()
+                searchViewToolbar.closeSearch()
                 return true
             }
-
             R.id.action_favorites_list -> {
                 supportFragmentManager.beginTransaction().addToBackStack(null).hide(characterRegularListFragment)
                     .hide(infoFragment).show(characterFavoriteListFragment).commit()
                 characterFavoriteListFragment.onResume()
+                searchViewToolbar.closeSearch()
                 return true
             }
-
             R.id.action_info -> {
                 supportFragmentManager.beginTransaction().addToBackStack(null).hide(characterRegularListFragment)
                     .hide(characterFavoriteListFragment).show(infoFragment).commit()
                 characterFavoriteListFragment.onResume()
+                searchViewToolbar.closeSearch()
                 return true
             }
-
         }
         return true
     }
