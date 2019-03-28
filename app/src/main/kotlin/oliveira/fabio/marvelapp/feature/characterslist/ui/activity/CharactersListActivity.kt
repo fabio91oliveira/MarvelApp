@@ -15,9 +15,12 @@ class CharactersListActivity : AppCompatActivity() {
         setContentView(R.layout.activity_characters_list)
 
         val adapter = TabAdapter(supportFragmentManager)
-        adapter.addFragment(CharacterRegularListFragment(), resources.getString(R.string.characters_list_regular_list))
         adapter.addFragment(
-            CharacterFavoriteListFragment(),
+            CharacterRegularListFragment.newInstance(),
+            resources.getString(R.string.characters_list_regular_list)
+        )
+        adapter.addFragment(
+            CharacterFavoriteListFragment.newInstance(),
             resources.getString(R.string.characters_list_favorite_list)
         )
         viewPager.adapter = adapter

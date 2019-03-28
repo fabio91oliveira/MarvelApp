@@ -41,7 +41,7 @@ class CharactersListViewModel(private val charactersRepository: CharactersReposi
             }.subscribe({
                 listOfAllFavorites.clear()
                 listOfAllFavorites.addAll(it.first)
-                latestResults.clear()
+//                latestResults.clear() // TODO VERIFY IT
                 latestResults.addAll(validateFavoriteCharacters(it.second))
                 listOfAllResults.addAll(validateFavoriteCharacters(it.second))
                 mutableLiveDataResults.value = Event(Response.success(it.second))

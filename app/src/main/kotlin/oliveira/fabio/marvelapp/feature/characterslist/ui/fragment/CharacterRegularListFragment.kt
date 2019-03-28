@@ -281,6 +281,10 @@ class CharacterRegularListFragment : Fragment(), CharactersAdapter.OnClickCharac
         private const val CURRENT_TAB = "CURRENT_TAB"
         private const val REQUEST_CODE_UPDATE_FAVORITE = 200
         private const val TAB_REGULAR_LIST = 0
+
+        fun newInstance(): CharacterRegularListFragment {
+            return CharacterRegularListFragment()
+        }
     }
 
 }
