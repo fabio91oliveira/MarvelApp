@@ -29,22 +29,12 @@ class CharacterDetailsRobot(
 
         private const val API_MARVEL_CHARACTER_DETAILS_COMICS_REQUEST = "/v1/public/characters/1017100/comics"
         private const val API_MARVEL_CHARACTER_DETAILS_COMICS_RESPONSE = "character_details_comics.json"
-        private const val API_MARVEL_CHARACTER_DETAILS_COMICS_RESPONSE_NO_RESULT =
-            "character_details_comics_no_result.json"
         private const val API_MARVEL_CHARACTER_DETAILS_EVENTS_REQUEST = "/v1/public/characters/1017100/events"
         private const val API_MARVEL_CHARACTER_DETAILS_EVENTS_RESPONSE = "character_details_events.json"
-        private const val API_MARVEL_CHARACTER_DETAILS_EVENTS_RESPONSE_NO_RESULT =
-            "character_details_events_no_result.json"
         private const val API_MARVEL_CHARACTER_DETAILS_SERIES_REQUEST = "/v1/public/characters/1017100/series"
         private const val API_MARVEL_CHARACTER_DETAILS_SERIES_RESPONSE = "character_details_series.json"
-        private const val API_MARVEL_CHARACTER_DETAILS_SERIES_RESPONSE_NO_RESULT =
-            "character_details_series_no_result.json"
         private const val API_MARVEL_CHARACTER_DETAILS_STORIES_REQUEST = "/v1/public/characters/1017100/stories"
         private const val API_MARVEL_CHARACTER_DETAILS_STORIES_RESPONSE = "character_details_stories.json"
-        private const val API_MARVEL_CHARACTER_DETAILS_STORIES_RESPONSE_NO_RESULT =
-            "character_details_stories_no_result.json"
-
-        private const val SERVER_ERROR_CODE = 500
     }
 
     val intent = Intent()
@@ -91,42 +81,6 @@ class CharacterDetailsRobot(
             .pathIs(API_MARVEL_CHARACTER_DETAILS_STORIES_REQUEST)
     }
 
-    fun setupCharacterDetailsRequestsNoResult() {
-        server.addFixture(API_MARVEL_CHARACTER_DETAILS_COMICS_RESPONSE_NO_RESULT)
-            .ifRequestMatches()
-            .pathIs(API_MARVEL_CHARACTER_DETAILS_COMICS_REQUEST)
-
-        server.addFixture(API_MARVEL_CHARACTER_DETAILS_EVENTS_RESPONSE_NO_RESULT)
-            .ifRequestMatches()
-            .pathIs(API_MARVEL_CHARACTER_DETAILS_EVENTS_REQUEST)
-
-        server.addFixture(API_MARVEL_CHARACTER_DETAILS_SERIES_RESPONSE_NO_RESULT)
-            .ifRequestMatches()
-            .pathIs(API_MARVEL_CHARACTER_DETAILS_SERIES_REQUEST)
-
-        server.addFixture(API_MARVEL_CHARACTER_DETAILS_STORIES_RESPONSE_NO_RESULT)
-            .ifRequestMatches()
-            .pathIs(API_MARVEL_CHARACTER_DETAILS_STORIES_REQUEST)
-    }
-
-    fun setupCharacterDetailsRequestsError() {
-        server.addFixture(SERVER_ERROR_CODE, API_MARVEL_CHARACTER_DETAILS_COMICS_RESPONSE_NO_RESULT)
-            .ifRequestMatches()
-            .pathIs(API_MARVEL_CHARACTER_DETAILS_COMICS_REQUEST)
-
-        server.addFixture(SERVER_ERROR_CODE, API_MARVEL_CHARACTER_DETAILS_EVENTS_RESPONSE_NO_RESULT)
-            .ifRequestMatches()
-            .pathIs(API_MARVEL_CHARACTER_DETAILS_EVENTS_REQUEST)
-
-        server.addFixture(SERVER_ERROR_CODE, API_MARVEL_CHARACTER_DETAILS_SERIES_RESPONSE_NO_RESULT)
-            .ifRequestMatches()
-            .pathIs(API_MARVEL_CHARACTER_DETAILS_SERIES_REQUEST)
-
-        server.addFixture(SERVER_ERROR_CODE, API_MARVEL_CHARACTER_DETAILS_STORIES_RESPONSE_NO_RESULT)
-            .ifRequestMatches()
-            .pathIs(API_MARVEL_CHARACTER_DETAILS_STORIES_REQUEST)
-    }
-
     fun shouldShowCharacterDetailsTextsAndImage() {
         onView(ViewMatchers.withId(R.id.imgCharacter))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
@@ -149,14 +103,6 @@ class CharacterDetailsRobot(
         onView(ViewMatchers.withId(R.id.rvCharacterInfoList))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
         onView(withId(R.id.chkFavorite)).check(matches(isChecked()))
-    }
-
-    fun shouldNotShowwCharacterDetailsMoreInfo() {
-
-    }
-
-    fun shouldShowErrorMessage() {
-
     }
 
 }

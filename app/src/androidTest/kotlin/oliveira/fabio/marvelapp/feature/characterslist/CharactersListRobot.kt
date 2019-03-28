@@ -37,7 +37,6 @@ class CharactersListRobot(
         private const val API_MARVEL_CHARACTER_DETAILS_STORIES_REQUEST = "/v1/public/characters/1017100/stories"
         private const val API_MARVEL_CHARACTER_DETAILS_STORIES_RESPONSE = "character_details_stories.json"
 
-        private const val CHARACTER_ID = "1017100"
         private const val PARAMETER_FOR_RESEARCH = "a"
         private const val SERVER_ERROR_CODE = 500
     }

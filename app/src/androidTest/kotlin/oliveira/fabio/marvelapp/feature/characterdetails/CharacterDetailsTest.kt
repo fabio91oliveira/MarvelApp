@@ -48,29 +48,4 @@ class CharacterDetailsTest : BaseTest() {
             releaseIntent()
         }
     }
-
-    @Test
-    fun shouldShowErrorMessageFromNoResultRequest() {
-        robots {
-            initIntent()
-            setupIntentDependencies()
-            setupCharacterDetailsRequestsNoResult()
-            initActivity()
-            shouldShowErrorMessage()
-            releaseIntent()
-        }
-    }
-
-    @Test
-    fun shouldShowErrorMessageFromErrorRequest() {
-        robots {
-            initIntent()
-            setupIntentDependencies()
-            setupCharacterDetailsRequestsError()
-            initActivity()
-            shouldShowErrorMessage()
-            releaseIntent()
-        }
-    }
-
 }
