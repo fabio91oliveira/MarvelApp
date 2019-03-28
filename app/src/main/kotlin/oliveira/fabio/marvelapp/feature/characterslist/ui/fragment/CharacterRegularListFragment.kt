@@ -85,6 +85,12 @@ class CharacterRegularListFragment : Fragment(), CharactersAdapter.OnClickCharac
     }
 
 
+    override fun onResume() {
+        super.onResume()
+        charactersListViewModel.changeToRegularListPageType()
+    }
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         savedInstanceState?.let {
