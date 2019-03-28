@@ -57,11 +57,6 @@ class CharacterFavoriteListFragment : Fragment(), CharactersAdapter.OnClickChara
         }
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        activity?.tabLayout?.selectedTabPosition?.let { outState.putInt(CURRENT_TAB, it) }
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         savedInstanceState?.let {

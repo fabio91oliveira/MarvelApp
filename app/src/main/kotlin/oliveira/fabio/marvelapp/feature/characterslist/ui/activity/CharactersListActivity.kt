@@ -1,10 +1,11 @@
 package oliveira.fabio.marvelapp.feature.characterslist.ui.activity
 
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_characters_list.*
 import oliveira.fabio.marvelapp.R
-import oliveira.fabio.marvelapp.feature.characterslist.ui.adapter.TabAdapter
 import oliveira.fabio.marvelapp.feature.characterslist.ui.fragment.CharacterFavoriteListFragment
 import oliveira.fabio.marvelapp.feature.characterslist.ui.fragment.CharacterRegularListFragment
 

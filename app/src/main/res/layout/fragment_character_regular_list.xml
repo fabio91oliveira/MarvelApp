@@ -25,8 +25,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.3"/>
+            app:layout_constraintTop_toTopOf="parent"/>
 
     <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/loading"
@@ -38,7 +37,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_loading"
-            tools:visibility="visible"
-            app:layout_constraintVertical_bias="0.3"/>
+            tools:visibility="visible"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

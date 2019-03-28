@@ -67,11 +67,6 @@ class CharacterRegularListFragment : Fragment(), CharactersAdapter.OnClickCharac
         return inflater.inflate(R.layout.fragment_character_regular_list, container, false)
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        activity?.tabLayout?.selectedTabPosition?.let { outState.putInt(CURRENT_TAB, it) }
-    }
-
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)
         if (!isFirstTimeAtThisScreen && isVisibleToUser) {
@@ -85,16 +80,9 @@ class CharacterRegularListFragment : Fragment(), CharactersAdapter.OnClickCharac
     }
 
 
-    override fun onResume() {
-        super.onResume()
-        charactersListViewModel.changeToRegularListPageType()
-    }
-
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         savedInstanceState?.let {
-            activity?.tabLayout?.getTabAt(it.getInt(CURRENT_TAB))?.select()
             initLiveDatas()
             initRecyclerView()
             initSearchViewListener()
@@ -260,7 +248,9 @@ class CharacterRegularListFragment : Fragment(), CharactersAdapter.OnClickCharac
             view.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimaryDark))
         }.show()
 
-    private fun goToFirstTab() = activity?.tabLayout?.getTabAt(TAB_REGULAR_LIST)?.select()
+    private fun goToFirstTab(): Unit? {
+        return activity?.navigation?.setSelectedItemId(TAB_REGULAR_LIST)
+    }
 
     private fun showContent() {
         rvCharactersRegularList.visibility = View.VISIBLE
@@ -295,7 +285,7 @@ class CharacterRegularListFragment : Fragment(), CharactersAdapter.OnClickCharac
         const val LIST_OF_FAVORITES_TAG = "LIST_OF_FAVORITES"
         private const val CURRENT_TAB = "CURRENT_TAB"
         private const val REQUEST_CODE_UPDATE_FAVORITE = 200
-        private const val TAB_REGULAR_LIST = 0
+        private const val TAB_REGULAR_LIST = R.id.action_regular_list
 
         fun newInstance(): CharacterRegularListFragment {
             return CharacterRegularListFragment()
