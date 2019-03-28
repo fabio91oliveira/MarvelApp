@@ -13,7 +13,21 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:divider="@android:color/transparent"
-            tools:listitem="@layout/item_character"/>
+            tools:listitem="@layout/item_character"
+            tools:visibility="gone"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/txtNoResults"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorWhite"
+            android:visibility="gone"
+            android:text="@string/characters_list_no_results"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.3"/>
 
     <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/loading"
@@ -25,6 +39,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_loading"
-            tools:visibility="gone"/>
+            tools:visibility="visible"
+            app:layout_constraintVertical_bias="0.3"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -121,6 +121,7 @@ class CharacterRegularListFragment : Fragment(), CharactersAdapter.OnClickCharac
         charactersListViewModel.isQuerySearch = false
         clearList()
         hideContent()
+        hideNoResultsMessage()
         showLoading()
         initRecyclerView()
         activity?.searchViewToolbar?.closeSearch()
@@ -157,6 +158,7 @@ class CharacterRegularListFragment : Fragment(), CharactersAdapter.OnClickCharac
                         response.data?.run {
                             when (isNotEmpty()) {
                                 true -> {
+                                    hideNoResultsMessage()
                                     if (charactersListViewModel.isQuerySearch) clearList()
                                     if (charactersListViewModel.isFavoriteListPageType()) charactersAdapter.clearResults()
                                     addResults(this)
@@ -175,18 +177,20 @@ class CharacterRegularListFragment : Fragment(), CharactersAdapter.OnClickCharac
                                                 R.string.characters_list_no_more_results
                                             )
                                         showFeedbackToUser(message, true)
+                                    } else {
+                                        showNoResultsMessage()
                                     }
                                     hideContent()
                                 }
                             }
-                            if (charactersListViewModel.firstTime) charactersListViewModel.firstTime =
-                                false
+                            if (charactersListViewModel.firstTime) charactersListViewModel.firstTime = false
                             activity?.searchViewToolbar?.loading(false)
                             hideLoading()
                         }
                     }
                     Response.StatusEnum.ERROR -> {
                         hideLoading()
+                        hideContent()
                         showFeedbackToUser(
                             resources.getString(R.string.characters_list_error_network_error_description),
                             false
@@ -261,6 +265,14 @@ class CharacterRegularListFragment : Fragment(), CharactersAdapter.OnClickCharac
     private fun hideLoading() {
         loading.clearAnimation()
         loading.visibility = View.GONE
+    }
+
+    private fun showNoResultsMessage() {
+        txtNoResults.visibility = View.VISIBLE
+    }
+
+    private fun hideNoResultsMessage() {
+        txtNoResults.visibility = View.GONE
     }
 
     companion object {
