@@ -8,12 +8,11 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_characters_list.*
 import kotlinx.android.synthetic.main.fragment_character_regular_list.*
 import oliveira.fabio.marvelapp.R
@@ -36,8 +35,6 @@ class CharacterRegularListFragment : Fragment(), CharactersAdapter.OnClickCharac
 
     private fun initSearchViewListener() = activity?.searchViewToolbar?.setTextWatcherListener(this)
     private fun initSearchViewOnClickListener() = activity?.searchViewToolbar?.setOnClickListener(this)
-
-    private var isFirstTimeAtThisScreen = true
 
     private val charactersAdapter by lazy { CharactersAdapter(this) }
     private val layoutManager by lazy { LinearLayoutManager(context, RecyclerView.VERTICAL, false) }
@@ -67,18 +64,10 @@ class CharacterRegularListFragment : Fragment(), CharactersAdapter.OnClickCharac
         return inflater.inflate(R.layout.fragment_character_regular_list, container, false)
     }
 
-    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
-        super.setUserVisibleHint(isVisibleToUser)
-        if (!isFirstTimeAtThisScreen && isVisibleToUser) {
-            charactersListViewModel.changeToRegularListPageType()
-        }
-    }
-
     override fun onResume() {
         super.onResume()
         charactersListViewModel.changeToRegularListPageType()
     }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -147,7 +136,6 @@ class CharacterRegularListFragment : Fragment(), CharactersAdapter.OnClickCharac
         initSearchViewListener()
         initSearchViewOnClickListener()
         charactersListViewModel.getCharactersList()
-        isFirstTimeAtThisScreen = false
     }
 
     private fun initLiveDatas() {
@@ -230,23 +218,8 @@ class CharacterRegularListFragment : Fragment(), CharactersAdapter.OnClickCharac
     private fun addResults(character: List<Character>) = charactersAdapter.addResults(character)
     private fun startInfiniteScroll() = rvCharactersRegularList.addOnScrollListener(infiniteScrollListener)
 
-    private fun showFeedbackToUser(message: String, shortTime: Boolean, listener: View.OnClickListener? = null) =
-        Snackbar.make(container, message, if (shortTime) Snackbar.LENGTH_SHORT else Snackbar.LENGTH_LONG).apply {
-            if (shortTime) {
-                setAction(
-                    resources.getString(
-                        oliveira.fabio.marvelapp.R.string.snack_bar_hide
-                    ), listener
-                )
-            } else {
-                setAction(
-                    resources.getString(
-                        oliveira.fabio.marvelapp.R.string.error_try_again
-                    ), listener
-                )
-            }
-            view.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimaryDark))
-        }.show()
+    private fun showFeedbackToUser(message: String, shortTime: Boolean) =
+        Toast.makeText(context, message, if (shortTime) Toast.LENGTH_SHORT else Toast.LENGTH_LONG).show()
 
     private fun goToFirstTab(): Unit? {
         return activity?.navigation?.setSelectedItemId(TAB_REGULAR_LIST)

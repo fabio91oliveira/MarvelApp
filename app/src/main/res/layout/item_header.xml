@@ -5,7 +5,6 @@
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorSofterGrey"
     android:padding="@dimen/margin_sixteen">
 
     <androidx.appcompat.widget.AppCompatTextView

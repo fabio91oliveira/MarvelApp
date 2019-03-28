@@ -11,7 +11,6 @@
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:background="@color/colorHeart"
             app:layout_constraintTop_toTopOf="parent">
 
         <oliveira.fabio.marvelapp.feature.characterslist.ui.custom.CustomSearchViewToolbar
@@ -37,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="0dp"
             android:layout_marginStart="0dp"
-            android:background="@color/colorHeart"
+            android:background="@color/colorPrimary"
             app:itemTextColor="@color/navigator_color"
             app:itemIconTint="@color/navigator_color"
             app:layout_constraintBottom_toBottomOf="parent"

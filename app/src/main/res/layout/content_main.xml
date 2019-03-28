@@ -7,7 +7,6 @@
              app:layout_behavior="@string/appbar_scrolling_view_behavior"
              tools:showIn="@layout/activity_characters_list"
              android:padding="1dp"
-             android:id="@+id/mainContainer"
-android:background="@color/colorPrimaryDark">
+             android:id="@+id/mainContainer">
 
 </FrameLayout>

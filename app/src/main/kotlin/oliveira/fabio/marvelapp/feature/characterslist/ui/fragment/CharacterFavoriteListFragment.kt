@@ -6,12 +6,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_characters_list.*
 import kotlinx.android.synthetic.main.fragment_character_favorite_list.*
 import oliveira.fabio.marvelapp.R
@@ -28,8 +27,6 @@ class CharacterFavoriteListFragment : Fragment(), CharactersAdapter.OnClickChara
     private val charactersListViewModel: CharactersListViewModel by sharedViewModel()
     private val charactersAdapter by lazy { CharactersAdapter(this) }
     private val layoutManager by lazy { LinearLayoutManager(context, RecyclerView.VERTICAL, false) }
-
-    private var isFirstTimeAtThisScreen = true
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -48,13 +45,6 @@ class CharacterFavoriteListFragment : Fragment(), CharactersAdapter.OnClickChara
     override fun onResume() {
         super.onResume()
         charactersListViewModel.changeToFavoriteListPageType()
-    }
-
-    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
-        super.setUserVisibleHint(isVisibleToUser)
-        if (!isFirstTimeAtThisScreen && isVisibleToUser) {
-            charactersListViewModel.changeToFavoriteListPageType()
-        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -88,7 +78,6 @@ class CharacterFavoriteListFragment : Fragment(), CharactersAdapter.OnClickChara
         hideContent()
         initLiveDatas()
         initRecyclerView()
-        isFirstTimeAtThisScreen = false
     }
 
     private fun initLiveDatas() {
@@ -148,23 +137,8 @@ class CharacterFavoriteListFragment : Fragment(), CharactersAdapter.OnClickChara
         charactersAdapter.addResults(character)
     }
 
-    private fun showFeedbackToUser(message: String, shortTime: Boolean, listener: View.OnClickListener? = null) =
-        Snackbar.make(container, message, if (shortTime) Snackbar.LENGTH_SHORT else Snackbar.LENGTH_LONG).apply {
-            if (shortTime) {
-                setAction(
-                    resources.getString(
-                        oliveira.fabio.marvelapp.R.string.snack_bar_hide
-                    ), listener
-                )
-            } else {
-                setAction(
-                    resources.getString(
-                        oliveira.fabio.marvelapp.R.string.error_try_again
-                    ), listener
-                )
-            }
-            view.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimaryDark))
-        }.show()
+    private fun showFeedbackToUser(message: String, shortTime: Boolean) =
+        Toast.makeText(context, message, if (shortTime) Toast.LENGTH_SHORT else Toast.LENGTH_LONG).show()
 
     private fun showContent() {
         activity?.rvCharactersFavoriteList?.visibility = View.VISIBLE

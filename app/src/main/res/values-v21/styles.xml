@@ -1,9 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowBackground">@color/colorPrimaryDark</item>
+    </style>
     <style name="AppTheme.SplashTheme">
         <item name="android:navigationBarColor">@color/colorRedDark</item>
         <item name="android:statusBarColor">@color/colorRedDark</item>
         <item name="colorPrimaryDark">@color/colorRedDark</item>
         <item name="android:windowBackground">@drawable/splash_screen_theme</item>
+    </style>
+    <style name="TextAppearance.CollapsingToolbar" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:textSize">@dimen/text_twenty_two</item>
     </style>
 </resources>

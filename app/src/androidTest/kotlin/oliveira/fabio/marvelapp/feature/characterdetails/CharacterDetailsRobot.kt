@@ -84,7 +84,7 @@ class CharacterDetailsRobot(
     fun shouldShowCharacterDetailsTextsAndImage() {
         onView(ViewMatchers.withId(R.id.imgCharacter))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-        onView(ViewMatchers.withId(R.id.txtCharacterResourceURI))
+        onView(ViewMatchers.withId(R.id.txtName))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
         onView(ViewMatchers.withId(R.id.txtCharacterDescription))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
@@ -96,7 +96,7 @@ class CharacterDetailsRobot(
     fun shouldShowCharacterDetailsTextsAndImageAndFavorite() {
         onView(ViewMatchers.withId(R.id.imgCharacter))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-        onView(ViewMatchers.withId(R.id.txtCharacterResourceURI))
+        onView(ViewMatchers.withId(R.id.txtName))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
         onView(ViewMatchers.withId(R.id.txtCharacterDescription))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))

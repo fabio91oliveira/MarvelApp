@@ -5,12 +5,12 @@ import android.content.Intent
 import android.graphics.PorterDuff
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_character_details.*
 import oliveira.fabio.marvelapp.R
 import oliveira.fabio.marvelapp.feature.characterdetails.ui.adapter.CharacterDetailsAdapter
@@ -83,7 +83,7 @@ class CharacterDetailsActivity : AppCompatActivity() {
     private fun setValues() {
         character.apply {
             collapsingToolbar.title = handleStrings(name)
-            txtCharacterResourceURI.text = handleStrings(resourceURI)
+            txtName.text = handleStrings(resourceURI)
             txtCharacterDescription.text = handleStrings(description)
             chkFavorite.isChecked = character.isFavorite
             chkFavorite.setOnClickListener {
@@ -124,15 +124,7 @@ class CharacterDetailsActivity : AppCompatActivity() {
         })
     }
 
-    private fun showFeedbackToUser(message: String) =
-        Snackbar.make(container, message, Snackbar.LENGTH_LONG).apply {
-            setAction(
-                resources.getString(
-                    oliveira.fabio.marvelapp.R.string.snack_bar_hide
-                ), null
-            )
-            view.setBackgroundColor(ContextCompat.getColor(this@CharacterDetailsActivity, R.color.colorPrimaryDark))
-        }.show()
+    private fun showFeedbackToUser(message: String) = Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 
     private fun showLoadingMoreInfo(isLoading: Boolean) {
         if (isLoading) {

@@ -18,7 +18,7 @@
                 android:background="@color/colorWhite">
 
             <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/txtCharacterResourceURITitle"
+                    android:id="@+id/txtNameTitle"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/text_sixteen"
@@ -36,13 +36,13 @@
                     app:layout_constraintEnd_toEndOf="parent"/>
 
             <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/txtCharacterResourceURI"
+                    android:id="@+id/txtName"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/text_twelve"
-                    app:layout_constraintStart_toStartOf="@id/txtCharacterResourceURITitle"
-                    app:layout_constraintEnd_toEndOf="@id/txtCharacterResourceURITitle"
-                    app:layout_constraintTop_toBottomOf="@id/txtCharacterResourceURITitle"
+                    app:layout_constraintStart_toStartOf="@id/txtNameTitle"
+                    app:layout_constraintEnd_toEndOf="@id/txtNameTitle"
+                    app:layout_constraintTop_toBottomOf="@id/txtNameTitle"
                     android:textColor="@color/colorBlack"
                     android:ellipsize="end"
                     android:singleLine="true"
@@ -54,9 +54,9 @@
                     android:layout_height="@dimen/margin_one"
                     android:background="@color/colorSofterGrey"
                     android:layout_marginTop="@dimen/margin_ten"
-                    app:layout_constraintTop_toBottomOf="@id/txtCharacterResourceURI"
-                    app:layout_constraintStart_toStartOf="@id/txtCharacterResourceURI"
-                    app:layout_constraintEnd_toEndOf="@id/txtCharacterResourceURI"/>
+                    app:layout_constraintTop_toBottomOf="@id/txtName"
+                    app:layout_constraintStart_toStartOf="@id/txtName"
+                    app:layout_constraintEnd_toEndOf="@id/txtName"/>
 
             <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/txtCharacterDescriptionTitle"
@@ -65,8 +65,8 @@
                     android:textSize="@dimen/text_sixteen"
                     android:textStyle="bold"
                     app:layout_constraintTop_toBottomOf="@id/viewLineFirst"
-                    app:layout_constraintStart_toStartOf="@id/txtCharacterResourceURI"
-                    app:layout_constraintEnd_toEndOf="@id/txtCharacterResourceURI"
+                    app:layout_constraintStart_toStartOf="@id/txtName"
+                    app:layout_constraintEnd_toEndOf="@id/txtName"
                     android:textColor="@color/colorSofterGrey"
                     android:layout_marginTop="@dimen/margin_sixteen"
                     android:textAllCaps="true"
@@ -90,8 +90,8 @@
                     android:background="@color/colorSofterGrey"
                     android:layout_marginTop="@dimen/margin_ten"
                     app:layout_constraintTop_toBottomOf="@id/txtCharacterDescription"
-                    app:layout_constraintStart_toStartOf="@id/txtCharacterResourceURI"
-                    app:layout_constraintEnd_toEndOf="@id/txtCharacterResourceURI"/>
+                    app:layout_constraintStart_toStartOf="@id/txtName"
+                    app:layout_constraintEnd_toEndOf="@id/txtName"/>
 
             <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/txtCharacterMoreInformationTitle"
