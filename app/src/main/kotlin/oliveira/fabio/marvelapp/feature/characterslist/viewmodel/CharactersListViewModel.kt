@@ -13,6 +13,7 @@ import oliveira.fabio.marvelapp.util.Response
 
 class CharactersListViewModel(private val charactersRepository: CharactersRepository) : ViewModel() {
 
+    private var pageType = REGULAR_LIST
     private var latestData: CharactersResponse.Data? = null
     private val compositeDisposable by lazy { CompositeDisposable() }
     val mutableLiveDataResults by lazy { MutableLiveData<Event<Response<List<Character>>>>() }
@@ -24,11 +25,11 @@ class CharactersListViewModel(private val charactersRepository: CharactersReposi
     var isQuerySearch: Boolean = false
     var offset = INITIAL_VALUE
     var firstTime = true
-    private var pageType = REGULAR_LIST
+    var lastNameSearched: String? = null
 
-    fun getCharactersList(name: String? = null) {
+    fun getCharactersList() {
         val source1 = charactersRepository.getAllFavorites()
-        val source2 = charactersRepository.getCharacters(LIMIT_PER_PAGE, offset, name)
+        val source2 = charactersRepository.getCharacters(LIMIT_PER_PAGE, offset, lastNameSearched)
 
         compositeDisposable.add(
             Flowable.zip(

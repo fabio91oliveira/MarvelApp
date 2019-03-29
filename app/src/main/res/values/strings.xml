@@ -10,10 +10,11 @@
     <string name="characters_list_added_to_favorite">Character has been added to favorite.</string>
     <string name="characters_list_removed_to_favorite">Character has been removed from favorite.</string>
     <string name="characters_list_no_results">There are no results to show.</string>
+    <string name="characters_list_no_results_reset">There are no results to show. \nClick here to reset the list.</string>
     <string name="characters_list_search_no_results">There are no results. \nClick here to reset the list.</string>
     <string name="characters_list_error">An error has occurred. \nClick here to try again.</string>
     <string name="characters_list_no_favorites">There are no favorites yet.</string>
-    <string name="characters_list_no_more_results">There is no more results.</string>
+    <string name="characters_list_no_more_results">There are no more results.</string>
     <string name="character_details_error">An error has occurred to load.</string>
 
     <string name="character_details_resource_uri">Resource URI</string>

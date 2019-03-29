@@ -27,7 +27,6 @@ import oliveira.fabio.marvelapp.util.extensions.doRotateAnimation
 import oliveira.fabio.marvelapp.util.extensions.hideKeyboard
 import org.koin.android.viewmodel.ext.android.sharedViewModel
 
-
 class CharacterRegularListFragment : Fragment(), CharactersAdapter.OnClickCharacterListener,
     CustomSearchViewToolbar.OnClickListener, TextWatcher {
 
@@ -42,7 +41,7 @@ class CharacterRegularListFragment : Fragment(), CharactersAdapter.OnClickCharac
         object :
             InfiniteScrollListener(layoutManager, charactersListViewModel.offset) {
             override fun onLoadMore(totalLatestResult: Int) {
-                if (!charactersListViewModel.isQuerySearch && !charactersListViewModel.isFavoriteListPageType()) {
+                if (!charactersListViewModel.isFavoriteListPageType()) {
                     showFeedbackToUser(resources.getString(R.string.characters_list_loading), false)
                     setLatestTotalResult(totalLatestResult)
                     charactersListViewModel.getCharactersList()
@@ -103,7 +102,9 @@ class CharacterRegularListFragment : Fragment(), CharactersAdapter.OnClickCharac
     override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
         if (s.isNotEmpty()) {
             charactersListViewModel.isQuerySearch = true
-            charactersListViewModel.getCharactersList(s.toString())
+            charactersListViewModel.offset = 0
+            charactersListViewModel.lastNameSearched = s.toString()
+            charactersListViewModel.getCharactersList()
             activity?.searchViewToolbar?.loading(true)
         }
     }
@@ -136,10 +137,8 @@ class CharacterRegularListFragment : Fragment(), CharactersAdapter.OnClickCharac
                             when (isNotEmpty()) {
                                 true -> {
                                     hideWarningMessage()
-                                    if (charactersListViewModel.isQuerySearch) clearList()
-                                    if (charactersListViewModel.isFavoriteListPageType()) {
-                                        charactersAdapter.clearResults()
-                                    }
+                                    if (charactersListViewModel.isQuerySearch && charactersListViewModel.offset == 0) clearList()
+                                    if (charactersListViewModel.isFavoriteListPageType()) charactersAdapter.clearResults()
                                     addResults(this)
                                     showContent()
                                     if (charactersListViewModel.firstTime.not() && !charactersListViewModel.isQuerySearch) {
@@ -151,17 +150,30 @@ class CharacterRegularListFragment : Fragment(), CharactersAdapter.OnClickCharac
                                 }
                                 else -> {
                                     if (!charactersListViewModel.isQuerySearch) {
-                                        val message =
-                                            if (charactersListViewModel.firstTime) resources.getString(R.string.characters_list_no_results) else resources.getString(
-                                                R.string.characters_list_no_more_results
+                                        if (charactersListViewModel.firstTime) {
+                                            showWarningMessage(
+                                                resources.getString(R.string.characters_list_error)
+                                            ) { refreshList() }
+                                            hideContent()
+                                        } else {
+                                            showFeedbackToUser(
+                                                resources.getString(R.string.characters_list_no_results),
+                                                true
                                             )
-                                        showFeedbackToUser(message, true)
+                                        }
                                     } else {
-                                        showWarningMessage(
-                                            resources.getString(R.string.characters_list_search_no_results)
-                                        ) { refreshList() }
+                                        if (charactersListViewModel.offset == 0) {
+                                            hideContent()
+                                            showWarningMessage(
+                                                resources.getString(R.string.characters_list_no_results_reset)
+                                            ) { refreshList() }
+                                        } else {
+                                            showFeedbackToUser(
+                                                resources.getString(R.string.characters_list_no_results),
+                                                true
+                                            )
+                                        }
                                     }
-                                    hideContent()
                                 }
                             }
                             if (charactersListViewModel.firstTime) charactersListViewModel.firstTime = false
@@ -171,11 +183,11 @@ class CharacterRegularListFragment : Fragment(), CharactersAdapter.OnClickCharac
                     }
                     Response.StatusEnum.ERROR -> {
                         hideLoading()
-                        hideContent()
                         if (charactersListViewModel.firstTime) {
                             showWarningMessage(
                                 resources.getString(R.string.characters_list_error)
                             ) { refreshList() }
+                            hideContent()
                         } else {
                             showFeedbackToUser(
                                 resources.getString(R.string.characters_list_error_network_error_description),
@@ -220,6 +232,7 @@ class CharacterRegularListFragment : Fragment(), CharactersAdapter.OnClickCharac
 
     private fun refreshList() {
         charactersListViewModel.offset = 0
+        charactersListViewModel.lastNameSearched = null
         charactersListViewModel.firstTime = true
         charactersListViewModel.isQuerySearch = false
         clearList()

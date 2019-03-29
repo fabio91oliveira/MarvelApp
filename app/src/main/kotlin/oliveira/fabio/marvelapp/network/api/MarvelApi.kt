@@ -8,7 +8,7 @@ import retrofit2.http.Query
 
 interface MarvelApi {
     @GET("v1/public/characters")
-    fun getCharacters(@Query("name") name: String?, @Query("limit") limit: Int, @Query("offset") offset: Int): Flowable<CharactersResponse>
+    fun getCharacters(@Query("nameStartsWith") name: String?, @Query("limit") limit: Int, @Query("offset") offset: Int): Flowable<CharactersResponse>
 
     @GET("v1/public/characters/{characterId}/comics")
     fun getComics(@Path("characterId") id: Int, @Query("limit") limit: Int, @Query("orderBy") orderBy: String): Flowable<ComicsResponse>
