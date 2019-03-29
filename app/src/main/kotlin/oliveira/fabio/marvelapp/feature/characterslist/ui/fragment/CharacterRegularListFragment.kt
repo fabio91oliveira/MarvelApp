@@ -31,10 +31,8 @@ class CharacterRegularListFragment : Fragment(), CharactersAdapter.OnClickCharac
     CustomSearchViewToolbar.OnClickListener, TextWatcher {
 
     private val charactersListViewModel: CharactersListViewModel by sharedViewModel()
-
     private fun initSearchViewListener() = activity?.searchViewToolbar?.setTextWatcherListener(this)
     private fun initSearchViewOnClickListener() = activity?.searchViewToolbar?.setOnClickListener(this)
-
     private val charactersAdapter by lazy { CharactersAdapter(this) }
     private val layoutManager by lazy { LinearLayoutManager(context, RecyclerView.VERTICAL, false) }
     private val infiniteScrollListener by lazy {
@@ -211,6 +209,12 @@ class CharacterRegularListFragment : Fragment(), CharactersAdapter.OnClickCharac
         if (charactersListViewModel.listOfAllResults.isNotEmpty()) {
             addResults(charactersListViewModel.listOfAllResults)
             showContent()
+        } else {
+            if (!charactersListViewModel.firstTime) {
+                showWarningMessage(
+                    resources.getString(R.string.characters_list_error)
+                ) { refreshList() }
+            }
         }
     }
 
