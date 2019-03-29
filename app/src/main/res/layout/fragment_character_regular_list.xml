@@ -16,14 +16,14 @@
             tools:visibility="gone"/>
 
     <androidx.constraintlayout.widget.Group
-            android:id="@+id/grpNotFound"
+            android:id="@+id/grpWarningMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:constraint_referenced_ids="imgNoResults,txtNoResults"
+            app:constraint_referenced_ids="imgWarning,txtWarning"
             android:visibility="gone"/>
 
     <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/imgNoResults"
+            android:id="@+id/imgWarning"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:srcCompat="@drawable/ic_not_found"
@@ -34,7 +34,7 @@
             tools:visibility="visible"/>
 
     <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/txtNoResults"
+            android:id="@+id/txtWarning"
             android:textAlignment="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -42,11 +42,11 @@
             android:visibility="visible"
             android:textAllCaps="true"
             android:textStyle="bold"
-            android:text="@string/characters_list_search_no_results"
+            tools:text="@string/characters_list_search_no_results"
             android:layout_marginTop="@dimen/margin_sixteen"
-            app:layout_constraintEnd_toEndOf="@id/imgNoResults"
-            app:layout_constraintStart_toStartOf="@id/imgNoResults"
-            app:layout_constraintTop_toBottomOf="@+id/imgNoResults"
+            app:layout_constraintEnd_toEndOf="@id/imgWarning"
+            app:layout_constraintStart_toStartOf="@id/imgWarning"
+            app:layout_constraintTop_toBottomOf="@+id/imgWarning"
             tools:visibility="visible"/>
 
     <androidx.appcompat.widget.AppCompatImageView

@@ -74,7 +74,6 @@ class CharacterRegularListFragment : Fragment(), CharactersAdapter.OnClickCharac
         savedInstanceState?.let {
             initLiveDatas()
             initRecyclerView()
-            initClickListener()
             initSearchViewListener()
             initSearchViewOnClickListener()
         } ?: run {
@@ -111,6 +110,8 @@ class CharacterRegularListFragment : Fragment(), CharactersAdapter.OnClickCharac
 
     override fun onUpdateClick() = refreshList()
 
+    override fun onSearchClick() = goToFirstTab()
+
     override fun onDestroy() {
         super.onDestroy()
         charactersListViewModel.onDestroy()
@@ -121,15 +122,9 @@ class CharacterRegularListFragment : Fragment(), CharactersAdapter.OnClickCharac
         showLoading()
         initLiveDatas()
         initRecyclerView()
-        initClickListener()
         initSearchViewListener()
         initSearchViewOnClickListener()
         charactersListViewModel.getCharactersList()
-    }
-
-    private fun initClickListener() {
-        imgNoResults.setOnClickListener { refreshList() }
-        txtNoResults.setOnClickListener { refreshList() }
     }
 
     private fun initLiveDatas() {
@@ -140,7 +135,7 @@ class CharacterRegularListFragment : Fragment(), CharactersAdapter.OnClickCharac
                         response.data?.run {
                             when (isNotEmpty()) {
                                 true -> {
-                                    hideNoResultsMessage()
+                                    hideWarningMessage()
                                     if (charactersListViewModel.isQuerySearch) clearList()
                                     if (charactersListViewModel.isFavoriteListPageType()) {
                                         charactersAdapter.clearResults()
@@ -162,7 +157,9 @@ class CharacterRegularListFragment : Fragment(), CharactersAdapter.OnClickCharac
                                             )
                                         showFeedbackToUser(message, true)
                                     } else {
-                                        showNoResultsMessage()
+                                        showWarningMessage(
+                                            resources.getString(R.string.characters_list_search_no_results)
+                                        ) { refreshList() }
                                     }
                                     hideContent()
                                 }
@@ -174,11 +171,17 @@ class CharacterRegularListFragment : Fragment(), CharactersAdapter.OnClickCharac
                     }
                     Response.StatusEnum.ERROR -> {
                         hideLoading()
-//                        hideContent()
-                        showFeedbackToUser(
-                            resources.getString(R.string.characters_list_error_network_error_description),
-                            false
-                        )
+                        hideContent()
+                        if (charactersListViewModel.firstTime) {
+                            showWarningMessage(
+                                resources.getString(R.string.characters_list_error)
+                            ) { refreshList() }
+                        } else {
+                            showFeedbackToUser(
+                                resources.getString(R.string.characters_list_error_network_error_description),
+                                false
+                            )
+                        }
                     }
                 }
             }
@@ -217,11 +220,11 @@ class CharacterRegularListFragment : Fragment(), CharactersAdapter.OnClickCharac
 
     private fun refreshList() {
         charactersListViewModel.offset = 0
-        charactersListViewModel.firstTime
+        charactersListViewModel.firstTime = true
         charactersListViewModel.isQuerySearch = false
         clearList()
         hideContent()
-        hideNoResultsMessage()
+        hideWarningMessage()
         showLoading()
         initRecyclerView()
         activity?.searchViewToolbar?.closeSearch()
@@ -253,12 +256,17 @@ class CharacterRegularListFragment : Fragment(), CharactersAdapter.OnClickCharac
         loading.visibility = View.GONE
     }
 
-    private fun showNoResultsMessage() {
-        grpNotFound.visibility = View.VISIBLE
+    private fun showWarningMessage(message: String, function: () -> Unit) {
+        grpWarningMessage.visibility = View.VISIBLE
+        txtWarning.text = message
+        imgWarning.setOnClickListener { function.invoke() }
+        txtWarning.setOnClickListener { function.invoke() }
     }
 
-    private fun hideNoResultsMessage() {
-        grpNotFound.visibility = View.GONE
+    private fun hideWarningMessage() {
+        grpWarningMessage.visibility = View.GONE
+        imgWarning.setOnClickListener(null)
+        txtWarning.setOnClickListener(null)
     }
 
     companion object {

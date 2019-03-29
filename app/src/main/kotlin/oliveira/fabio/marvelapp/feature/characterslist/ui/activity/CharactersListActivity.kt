@@ -44,7 +44,6 @@ class CharactersListActivity : AppCompatActivity(), BottomNavigationView.OnNavig
                 supportFragmentManager.beginTransaction().addToBackStack(null).hide(characterFavoriteListFragment)
                     .hide(infoFragment).show(characterRegularListFragment).commit()
                 characterRegularListFragment.onResume()
-                searchViewToolbar.closeSearch()
                 return true
             }
             R.id.action_favorites_list -> {
