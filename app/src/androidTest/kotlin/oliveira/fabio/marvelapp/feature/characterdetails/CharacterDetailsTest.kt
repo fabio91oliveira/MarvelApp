@@ -48,4 +48,16 @@ class CharacterDetailsTest : BaseTest() {
             releaseIntent()
         }
     }
+
+    @Test
+    fun shouldAddCharacterToFavorite() {
+        robots {
+            initIntent()
+            setupIntentDependencies()
+            setupCharacterDetailsRequests()
+            initActivity()
+            shouldClickFavoriteCheck()
+            releaseIntent()
+        }
+    }
 }

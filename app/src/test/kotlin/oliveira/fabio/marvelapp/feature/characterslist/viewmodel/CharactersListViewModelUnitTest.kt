@@ -87,6 +87,7 @@ class CharactersListViewModelUnitTest : KoinTest {
         val characterList = createCharactersList()
         val limit = 20
         val name = "name"
+        charactersListViewModel.lastNameSearched = name
 
         Mockito.`when`(charactersRepository.getAllFavorites())
             .then { Flowable.just(characterList) }
@@ -94,7 +95,7 @@ class CharactersListViewModelUnitTest : KoinTest {
         Mockito.`when`(charactersRepository.getCharacters(limit, charactersListViewModel.offset, name))
             .then { Flowable.just(JsonUtil.characterResponseMocked) }
 
-        charactersListViewModel.getCharactersList(name)
+        charactersListViewModel.getCharactersList()
 
         Mockito.verify(charactersRepository).getAllFavorites()
         Mockito.verify(charactersRepository).getCharacters(limit, charactersListViewModel.offset, name)
@@ -109,6 +110,7 @@ class CharactersListViewModelUnitTest : KoinTest {
     fun shouldGetCharactersListWithNameWithError() {
         val limit = 20
         val name = "name"
+        charactersListViewModel.lastNameSearched = name
 
         Mockito.`when`(charactersRepository.getAllFavorites())
             .then { Flowable.just(Throwable()) }
@@ -116,7 +118,7 @@ class CharactersListViewModelUnitTest : KoinTest {
         Mockito.`when`(charactersRepository.getCharacters(limit, charactersListViewModel.offset, name))
             .then { Flowable.just(Throwable()) }
 
-        charactersListViewModel.getCharactersList(name)
+        charactersListViewModel.getCharactersList()
 
         Mockito.verify(charactersRepository).getAllFavorites()
         Mockito.verify(charactersRepository).getCharacters(limit, charactersListViewModel.offset, name)

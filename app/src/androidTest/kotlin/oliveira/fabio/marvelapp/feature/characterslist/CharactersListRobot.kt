@@ -61,12 +61,6 @@ class CharactersListRobot(
             .pathIs(API_MARVEL_CHARACTERS_LIST_REQUEST)
     }
 
-    fun setupCharactersListRequestNoResult() {
-        server.addFixture(API_MARVEL_CHARACTERS_LIST_JSON_RESPONSE_NO_RESULT)
-            .ifRequestMatches()
-            .pathIs(API_MARVEL_CHARACTERS_LIST_REQUEST)
-    }
-
     fun setupCharactersListRequestError() {
         server.addFixture(SERVER_ERROR_CODE, API_MARVEL_CHARACTERS_LIST_JSON_RESPONSE_NO_RESULT)
             .ifRequestMatches()
@@ -95,14 +89,9 @@ class CharactersListRobot(
         onView(withId(R.id.rvCharactersRegularList)).check(matches(isDisplayed()))
     }
 
-    fun shouldShouldNoResultMessage() {
-        onView(withId(com.google.android.material.R.id.snackbar_text))
-            .check(matches(withText(R.string.characters_list_no_results)))
-    }
-
     fun shouldShouldErrorMessage() {
-        onView(withId(com.google.android.material.R.id.snackbar_text))
-            .check(matches(withText(R.string.characters_list_error_network_error_description)))
+        onView(withId(R.id.txtWarning))
+            .check(matches(withText(R.string.characters_list_error)))
     }
 
     fun shouldClickFirstItem() {

@@ -35,15 +35,6 @@ class CharactersListTest : BaseTest() {
     }
 
     @Test
-    fun shouldNotExistItems() {
-        robots {
-            setupCharactersListRequestNoResult()
-            initActivity()
-            shouldShouldNoResultMessage()
-        }
-    }
-
-    @Test
     fun shouldAppearsCharacterDetailsScreen() {
         robots {
             initIntent()

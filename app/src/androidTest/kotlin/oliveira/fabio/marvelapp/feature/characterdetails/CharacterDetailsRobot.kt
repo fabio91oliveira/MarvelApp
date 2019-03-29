@@ -2,6 +2,7 @@ package oliveira.fabio.marvelapp.feature.characterdetails
 
 import android.content.Intent
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
@@ -102,6 +103,11 @@ class CharacterDetailsRobot(
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
         onView(ViewMatchers.withId(R.id.rvCharacterInfoList))
             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+        onView(withId(R.id.chkFavorite)).check(matches(isChecked()))
+    }
+
+    fun shouldClickFavoriteCheck() {
+        onView(withId(R.id.chkFavorite)).perform(click())
         onView(withId(R.id.chkFavorite)).check(matches(isChecked()))
     }
 
