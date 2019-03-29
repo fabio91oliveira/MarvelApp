@@ -74,7 +74,7 @@
                 android:layout_marginStart="@dimen/margin_six"
                 android:layout_marginLeft="@dimen/margin_six"
                 android:singleLine="true"
-                android:imeOptions="actionSearch|flagNoExtractUi|flagNoFullscreen"
+                android:imeOptions="actionDone|flagNoExtractUi|flagNoFullscreen"
                 app:layout_constraintStart_toEndOf="@id/searchBackButton"
                 app:layout_constraintEnd_toEndOf="parent"/>
 

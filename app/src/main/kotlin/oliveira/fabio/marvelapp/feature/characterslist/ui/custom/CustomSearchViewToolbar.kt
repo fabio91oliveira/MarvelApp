@@ -59,7 +59,7 @@ class CustomSearchViewToolbar(
         updateButton.setOnClickListener { onClickListener?.onUpdateClick() }
         searchEditText.setOnEditorActionListener(object : TextView.OnEditorActionListener {
             override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
                     v?.hideKeyboard()
                     container.requestFocus()
                     return true
