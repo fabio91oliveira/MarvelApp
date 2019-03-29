@@ -37,7 +37,6 @@ class CharactersListRobot(
         private const val API_MARVEL_CHARACTER_DETAILS_STORIES_REQUEST = "/v1/public/characters/1017100/stories"
         private const val API_MARVEL_CHARACTER_DETAILS_STORIES_RESPONSE = "character_details_stories.json"
 
-        private const val CHARACTER_ID = "1017100"
         private const val PARAMETER_FOR_RESEARCH = "a"
         private const val SERVER_ERROR_CODE = 500
     }
@@ -58,12 +57,6 @@ class CharactersListRobot(
 
     fun setupCharactersListRequest() {
         server.addFixture(API_MARVEL_CHARACTERS_LIST_JSON_RESPONSE)
-            .ifRequestMatches()
-            .pathIs(API_MARVEL_CHARACTERS_LIST_REQUEST)
-    }
-
-    fun setupCharactersListRequestNoResult() {
-        server.addFixture(API_MARVEL_CHARACTERS_LIST_JSON_RESPONSE_NO_RESULT)
             .ifRequestMatches()
             .pathIs(API_MARVEL_CHARACTERS_LIST_REQUEST)
     }
@@ -93,21 +86,16 @@ class CharactersListRobot(
     }
 
     fun shouldRecyclerViewDisplay() {
-        onView(withId(R.id.rvCharactersList)).check(matches(isDisplayed()))
-    }
-
-    fun shouldShouldNoResultMessage() {
-        onView(withId(com.google.android.material.R.id.snackbar_text))
-            .check(matches(withText(R.string.characters_list_no_results)))
+        onView(withId(R.id.rvCharactersRegularList)).check(matches(isDisplayed()))
     }
 
     fun shouldShouldErrorMessage() {
-        onView(withId(com.google.android.material.R.id.snackbar_text))
-            .check(matches(withText(R.string.characters_list_error_network_error_description)))
+        onView(withId(R.id.txtWarning))
+            .check(matches(withText(R.string.characters_list_error)))
     }
 
     fun shouldClickFirstItem() {
-        onView(withId(R.id.rvCharactersList))
+        onView(withId(R.id.rvCharactersRegularList))
             .perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(1, click()))
     }
 

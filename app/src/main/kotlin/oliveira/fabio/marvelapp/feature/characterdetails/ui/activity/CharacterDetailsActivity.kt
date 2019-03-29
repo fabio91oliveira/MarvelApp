@@ -5,17 +5,17 @@ import android.content.Intent
 import android.graphics.PorterDuff
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_character_details.*
 import oliveira.fabio.marvelapp.R
 import oliveira.fabio.marvelapp.feature.characterdetails.ui.adapter.CharacterDetailsAdapter
 import oliveira.fabio.marvelapp.feature.characterdetails.viewmodel.CharacterDetailsViewModel
-import oliveira.fabio.marvelapp.feature.characterslist.ui.activity.CharactersListActivity
+import oliveira.fabio.marvelapp.feature.characterslist.ui.fragment.CharacterRegularListFragment
 import oliveira.fabio.marvelapp.model.persistence.Character
 import oliveira.fabio.marvelapp.util.Response
 import oliveira.fabio.marvelapp.util.extensions.loadImageByGlide
@@ -26,8 +26,8 @@ class CharacterDetailsActivity : AppCompatActivity() {
 
     private val characterDetailsViewModel: CharacterDetailsViewModel by viewModel()
     private val characterDetailsAdapter by lazy { CharacterDetailsAdapter() }
-    private val character by lazy { intent?.extras?.getSerializable(CharactersListActivity.CHARACTER_TAG) as Character }
-    private val listOfAllFavorites by lazy { intent?.extras?.getSerializable(CharactersListActivity.LIST_OF_FAVORITES_TAG) as ArrayList<Character> }
+    private val character by lazy { intent?.extras?.getSerializable(CharacterRegularListFragment.CHARACTER_TAG) as Character }
+    private val listOfAllFavorites by lazy { intent?.extras?.getSerializable(CharacterRegularListFragment.LIST_OF_FAVORITES_TAG) as ArrayList<Character> }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,14 +83,14 @@ class CharacterDetailsActivity : AppCompatActivity() {
     private fun setValues() {
         character.apply {
             collapsingToolbar.title = handleStrings(name)
-            txtCharacterResourceURI.text = handleStrings(resourceURI)
+            txtName.text = handleStrings(resourceURI)
             txtCharacterDescription.text = handleStrings(description)
             chkFavorite.isChecked = character.isFavorite
             chkFavorite.setOnClickListener {
                 character.isFavorite = !character.isFavorite
                 characterDetailsViewModel.addRemoveFavorite(character)
                 val intent = Intent()
-                intent.putExtra(CharactersListActivity.CHARACTER_TAG, character)
+                intent.putExtra(CharacterRegularListFragment.CHARACTER_TAG, character)
                 setResult(Activity.RESULT_OK, intent)
             }
             imgCharacter.loadImageByGlide(urlImage)
@@ -124,15 +124,7 @@ class CharacterDetailsActivity : AppCompatActivity() {
         })
     }
 
-    private fun showFeedbackToUser(message: String) =
-        Snackbar.make(container, message, Snackbar.LENGTH_LONG).apply {
-            setAction(
-                resources.getString(
-                    oliveira.fabio.marvelapp.R.string.snack_bar_hide
-                ), null
-            )
-            view.setBackgroundColor(ContextCompat.getColor(this@CharacterDetailsActivity, R.color.colorPrimaryDark))
-        }.show()
+    private fun showFeedbackToUser(message: String) = Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 
     private fun showLoadingMoreInfo(isLoading: Boolean) {
         if (isLoading) {

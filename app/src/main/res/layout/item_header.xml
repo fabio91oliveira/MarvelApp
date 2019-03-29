@@ -5,8 +5,8 @@
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorSofterGrey"
-    android:padding="@dimen/margin_sixteen">
+        android:padding="@dimen/margin_sixteen"
+        android:background="@color/colorSofterGrey">
 
     <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/txtHeaderTitle"
@@ -20,6 +20,5 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

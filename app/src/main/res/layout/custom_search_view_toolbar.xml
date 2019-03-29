@@ -7,7 +7,18 @@
         android:focusableInTouchMode="true"
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
-        android:background="@color/colorPrimary">
+        android:background="@color/colorPrimaryDark">
+
+    <View
+            android:id="@+id/updateButton"
+            android:layout_width="@dimen/margin_twenty_four"
+            android:layout_height="@dimen/margin_twenty_four"
+            android:background="@drawable/ic_refresh"
+            android:layout_marginRight="@dimen/margin_sixteen"
+            android:layout_marginEnd="@dimen/margin_sixteen"
+            app:layout_constraintEnd_toStartOf="@id/searchOpenButton"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
     <View
             android:id="@+id/searchOpenButton"
@@ -24,7 +35,13 @@
             android:id="@+id/searchOpenView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/colorWhite"
+            android:layout_marginTop="@dimen/margin_six"
+            android:layout_marginBottom="@dimen/margin_six"
+            android:layout_marginStart="@dimen/margin_six"
+            android:layout_marginLeft="@dimen/margin_six"
+            android:layout_marginEnd="@dimen/margin_six"
+            android:layout_marginRight="@dimen/margin_six"
+            android:background="@drawable/background_round"
             android:visibility="invisible">
 
         <View
@@ -57,7 +74,7 @@
                 android:layout_marginStart="@dimen/margin_six"
                 android:layout_marginLeft="@dimen/margin_six"
                 android:singleLine="true"
-                android:imeOptions="actionSearch|flagNoExtractUi|flagNoFullscreen"
+                android:imeOptions="actionDone|flagNoExtractUi|flagNoFullscreen"
                 app:layout_constraintStart_toEndOf="@id/searchBackButton"
                 app:layout_constraintEnd_toEndOf="parent"/>
 

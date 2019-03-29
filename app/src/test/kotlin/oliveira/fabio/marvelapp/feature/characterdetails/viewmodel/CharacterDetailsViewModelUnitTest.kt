@@ -28,28 +28,30 @@ class CharacterDetailsViewModelUnitTest : KoinTest {
 
     @After
     fun after() {
-        StandAloneContext.closeKoin()
+        StandAloneContext.stopKoin()
     }
 
     @Test
     fun shouldGetDatasByCharacterIdWithSuccess() {
         val id = 1
+        val limit = 3
+        val orderBy = "modified"
 
-        Mockito.`when`(charactersRepository.getComics(1))
+        Mockito.`when`(charactersRepository.getComics(id, limit, orderBy))
             .then { Flowable.just(JsonUtil.comicsResponseMocked) }
-        Mockito.`when`(charactersRepository.getEvents(1))
+        Mockito.`when`(charactersRepository.getEvents(id, limit, orderBy))
             .then { Flowable.just(JsonUtil.eventsResponseMocked) }
-        Mockito.`when`(charactersRepository.getSeries(1))
+        Mockito.`when`(charactersRepository.getSeries(id, limit, orderBy))
             .then { Flowable.just(JsonUtil.seriesResponseMocked) }
-        Mockito.`when`(charactersRepository.getStories(1))
+        Mockito.`when`(charactersRepository.getStories(id, limit, orderBy))
             .then { Flowable.just(JsonUtil.storiesResponseMocked) }
 
         characterDetailsViewModel.getDatasByCharacterId(id)
 
-        Mockito.verify(charactersRepository).getComics(1)
-        Mockito.verify(charactersRepository).getEvents(1)
-        Mockito.verify(charactersRepository).getSeries(1)
-        Mockito.verify(charactersRepository).getStories(1)
+        Mockito.verify(charactersRepository).getComics(id, limit, orderBy)
+        Mockito.verify(charactersRepository).getEvents(id, limit, orderBy)
+        Mockito.verify(charactersRepository).getSeries(id, limit, orderBy)
+        Mockito.verify(charactersRepository).getStories(id, limit, orderBy)
 
         val status = characterDetailsViewModel.mutableLiveDataEventsList.value?.getContentIfNotHandled()?.statusEnum
         Assert.assertEquals(Response.StatusEnum.SUCCESS, status)
@@ -58,22 +60,24 @@ class CharacterDetailsViewModelUnitTest : KoinTest {
     @Test
     fun shouldGetDatasByCharacterIdWithError() {
         val id = 1
+        val limit = 3
+        val orderBy = "modified"
 
-        Mockito.`when`(charactersRepository.getComics(1))
+        Mockito.`when`(charactersRepository.getComics(id, limit, orderBy))
             .then { Flowable.just(Throwable()) }
-        Mockito.`when`(charactersRepository.getEvents(1))
+        Mockito.`when`(charactersRepository.getEvents(id, limit, orderBy))
             .then { Flowable.just(Throwable()) }
-        Mockito.`when`(charactersRepository.getSeries(1))
+        Mockito.`when`(charactersRepository.getSeries(id, limit, orderBy))
             .then { Flowable.just(Throwable()) }
-        Mockito.`when`(charactersRepository.getStories(1))
+        Mockito.`when`(charactersRepository.getStories(id, limit, orderBy))
             .then { Flowable.just(Throwable()) }
 
         characterDetailsViewModel.getDatasByCharacterId(id)
 
-        Mockito.verify(charactersRepository).getComics(1)
-        Mockito.verify(charactersRepository).getEvents(1)
-        Mockito.verify(charactersRepository).getSeries(1)
-        Mockito.verify(charactersRepository).getStories(1)
+        Mockito.verify(charactersRepository).getComics(1, limit, orderBy)
+        Mockito.verify(charactersRepository).getEvents(1, limit, orderBy)
+        Mockito.verify(charactersRepository).getSeries(1, limit, orderBy)
+        Mockito.verify(charactersRepository).getStories(1, limit, orderBy)
 
         val status = characterDetailsViewModel.mutableLiveDataEventsList.value?.getContentIfNotHandled()?.statusEnum
         Assert.assertEquals(Response.StatusEnum.ERROR, status)

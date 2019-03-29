@@ -50,27 +50,14 @@ class CharacterDetailsTest : BaseTest() {
     }
 
     @Test
-    fun shouldShowErrorMessageFromNoResultRequest() {
+    fun shouldAddCharacterToFavorite() {
         robots {
             initIntent()
             setupIntentDependencies()
-            setupCharacterDetailsRequestsNoResult()
+            setupCharacterDetailsRequests()
             initActivity()
-            shouldShowErrorMessage()
+            shouldClickFavoriteCheck()
             releaseIntent()
         }
     }
-
-    @Test
-    fun shouldShowErrorMessageFromErrorRequest() {
-        robots {
-            initIntent()
-            setupIntentDependencies()
-            setupCharacterDetailsRequestsError()
-            initActivity()
-            shouldShowErrorMessage()
-            releaseIntent()
-        }
-    }
-
 }

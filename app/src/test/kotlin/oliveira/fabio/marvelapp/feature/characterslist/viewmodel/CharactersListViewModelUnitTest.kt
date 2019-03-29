@@ -29,7 +29,7 @@ class CharactersListViewModelUnitTest : KoinTest {
 
     @After
     fun after() {
-        StandAloneContext.closeKoin()
+        StandAloneContext.stopKoin()
     }
 
     @Test
@@ -39,19 +39,6 @@ class CharactersListViewModelUnitTest : KoinTest {
         charactersListViewModel.mutableLiveDataResults.value?.getContentIfNotHandled()?.let {
             Assert.assertEquals(it.statusEnum, Response.StatusEnum.SUCCESS)
         }
-    }
-
-    @Test
-    fun shouldRefreshFavoritesList() {
-        val characterList = createCharactersList()
-
-        Mockito.`when`(charactersRepository.getAllFavorites())
-            .then { Flowable.just(characterList) }
-
-        charactersListViewModel.refreshFavoritesList()
-
-        Mockito.verify(charactersRepository).getAllFavorites()
-        Assert.assertEquals(characterList, charactersListViewModel.listOfAllFavorites)
     }
 
     @Test
@@ -100,6 +87,7 @@ class CharactersListViewModelUnitTest : KoinTest {
         val characterList = createCharactersList()
         val limit = 20
         val name = "name"
+        charactersListViewModel.lastNameSearched = name
 
         Mockito.`when`(charactersRepository.getAllFavorites())
             .then { Flowable.just(characterList) }
@@ -107,7 +95,7 @@ class CharactersListViewModelUnitTest : KoinTest {
         Mockito.`when`(charactersRepository.getCharacters(limit, charactersListViewModel.offset, name))
             .then { Flowable.just(JsonUtil.characterResponseMocked) }
 
-        charactersListViewModel.getCharactersList(name)
+        charactersListViewModel.getCharactersList()
 
         Mockito.verify(charactersRepository).getAllFavorites()
         Mockito.verify(charactersRepository).getCharacters(limit, charactersListViewModel.offset, name)
@@ -122,6 +110,7 @@ class CharactersListViewModelUnitTest : KoinTest {
     fun shouldGetCharactersListWithNameWithError() {
         val limit = 20
         val name = "name"
+        charactersListViewModel.lastNameSearched = name
 
         Mockito.`when`(charactersRepository.getAllFavorites())
             .then { Flowable.just(Throwable()) }
@@ -129,7 +118,7 @@ class CharactersListViewModelUnitTest : KoinTest {
         Mockito.`when`(charactersRepository.getCharacters(limit, charactersListViewModel.offset, name))
             .then { Flowable.just(Throwable()) }
 
-        charactersListViewModel.getCharactersList(name)
+        charactersListViewModel.getCharactersList()
 
         Mockito.verify(charactersRepository).getAllFavorites()
         Mockito.verify(charactersRepository).getCharacters(limit, charactersListViewModel.offset, name)
@@ -141,46 +130,71 @@ class CharactersListViewModelUnitTest : KoinTest {
 
     @Test
     fun shouldAddFavorite() {
-        val characterList = createCharactersList()
         val character = createCharacterToAdd()
         val id = 1L
 
-        Mockito.`when`(charactersRepository.deleteFavorite(character))
-            .then { Flowable.just(id) }
-        Mockito.`when`(charactersRepository.getAllFavorites())
-            .then { Flowable.just(characterList) }
         Mockito.`when`(charactersRepository.addFavoriteCharacter(character))
             .then { Flowable.just(id) }
 
         charactersListViewModel.addRemoveFavorite(character)
 
-        Mockito.verify(charactersRepository).deleteFavorite(character)
-        Mockito.verify(charactersRepository).getAllFavorites()
         Mockito.verify(charactersRepository).addFavoriteCharacter(character)
 
-        Assert.assertEquals(characterList, charactersListViewModel.listOfAllFavorites)
+        val statusFavorites =
+            charactersListViewModel.mutableLiveDataFavorites.value?.getContentIfNotHandled()?.statusEnum
+        Assert.assertEquals(Response.StatusEnum.SUCCESS, statusFavorites)
     }
 
     @Test
-    fun shouldRemoveFavorite() {
-        val characterList = createCharactersList()
+    fun shouldRemoveFavoriteWithoutParameter() {
+        val characterList = arrayListOf<Character>()
         val character = createCharacterToRemove()
         val id = 1L
+        character.id = id
+        characterList.add(character)
+        charactersListViewModel.listOfAllFavorites.addAll(characterList)
 
         Mockito.`when`(charactersRepository.deleteFavorite(character))
             .then { Flowable.just(id) }
-        Mockito.`when`(charactersRepository.getAllFavorites())
-            .then { Flowable.just(characterList) }
         Mockito.`when`(charactersRepository.addFavoriteCharacter(character))
             .then { Flowable.just(id) }
 
         charactersListViewModel.addRemoveFavorite(character)
 
         Mockito.verify(charactersRepository).deleteFavorite(character)
-        Mockito.verify(charactersRepository).getAllFavorites()
-        Mockito.verify(charactersRepository).addFavoriteCharacter(character)
 
-        Assert.assertEquals(characterList, charactersListViewModel.listOfAllFavorites)
+
+        val statusFavorites =
+            charactersListViewModel.mutableLiveDataFavorites.value?.getContentIfNotHandled()?.statusEnum
+        Assert.assertEquals(Response.StatusEnum.SUCCESS, statusFavorites)
+    }
+
+    @Test
+    fun shouldRemoveFavoriteWithParameter() {
+        val characterList = arrayListOf<Character>()
+        val characterListTwo = createCharactersList()
+        val character = createCharacterToRemove()
+        val id = 1L
+        character.id = id
+        characterList.add(character)
+        charactersListViewModel.listOfAllFavorites.addAll(characterList)
+        charactersListViewModel.latestResults.addAll(characterListTwo)
+
+        Mockito.`when`(charactersRepository.deleteFavorite(character))
+            .then { Flowable.just(id) }
+        Mockito.`when`(charactersRepository.addFavoriteCharacter(character))
+            .then { Flowable.just(id) }
+
+        charactersListViewModel.addRemoveFavorite(character, true)
+
+        Mockito.verify(charactersRepository).deleteFavorite(character)
+
+
+        val statusFavorites =
+            charactersListViewModel.mutableLiveDataFavorites.value?.getContentIfNotHandled()?.statusEnum
+        Assert.assertEquals(Response.StatusEnum.SUCCESS, statusFavorites)
+        val statusResults = charactersListViewModel.mutableLiveDataResults.value?.getContentIfNotHandled()?.statusEnum
+        Assert.assertEquals(Response.StatusEnum.SUCCESS, statusResults)
     }
 
     private fun createCharacterToAdd() = Character("name", false, "description", "resourceURI", "urlImage")

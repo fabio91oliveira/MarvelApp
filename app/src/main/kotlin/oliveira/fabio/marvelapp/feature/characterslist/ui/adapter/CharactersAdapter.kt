@@ -31,12 +31,15 @@ class CharactersAdapter(private val onClickCharacterListener: OnClickCharacterLi
         results.forEach {
             if (it.id == character.id) {
                 it.isFavorite = character.isFavorite
-                notifyDataSetChanged()
             }
         }
+        notifyDataSetChanged()
     }
 
-    fun clearResults() = results.clear()
+    fun clearResults() {
+        results.clear()
+        notifyDataSetChanged()
+    }
 
     inner class ItemViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView),
         LayoutContainer {
@@ -49,7 +52,7 @@ class CharactersAdapter(private val onClickCharacterListener: OnClickCharacterLi
                 containerView.setOnClickListener { onClickCharacterListener.onCharacterClick(this) }
                 chkFavorite.setOnClickListener {
                     character.isFavorite = chkFavorite.isChecked
-                    onClickCharacterListener.onLikeButtonClick(character)
+                    onClickCharacterListener.onFavoriteButtonClick(character)
                 }
             }
         }
@@ -57,6 +60,6 @@ class CharactersAdapter(private val onClickCharacterListener: OnClickCharacterLi
 
     interface OnClickCharacterListener {
         fun onCharacterClick(character: Character)
-        fun onLikeButtonClick(character: Character)
+        fun onFavoriteButtonClick(character: Character)
     }
 }

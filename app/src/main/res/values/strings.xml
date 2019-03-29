@@ -1,20 +1,36 @@
 <resources>
     <string name="app_name">MarvelApp</string>
-    <string name="snack_bar_hide">Hide</string>
 
-    <string name="characters_list_error_network_error_description">An error has occurred. Click at Tab to try again!</string>
-    <string name="error_try_again">Error to load, click to try again</string>
+    <string name="characters_list_error_network_error_description">An error has occurred. Click at Refresh to try
+        again!
+    </string>
 
     <string name="characters_list_loading">Loading…</string>
     <string name="characters_list_has_been_loaded">The list has been loaded.</string>
-    <string name="characters_list_no_results">There is no results to show.</string>
-    <string name="characters_list_no_more_results">There is no more results.</string>
+    <string name="characters_list_added_to_favorite">Character has been added to favorite.</string>
+    <string name="characters_list_removed_to_favorite">Character has been removed from favorite.</string>
+    <string name="characters_list_no_results">There are no results to show.</string>
+    <string name="characters_list_no_results_reset">There are no results to show. \nClick here to reset the list.</string>
+    <string name="characters_list_search_no_results">There are no results. \nClick here to reset the list.</string>
+    <string name="characters_list_error">An error has occurred. \nClick here to try again.</string>
+    <string name="characters_list_no_favorites">There are no favorites yet.</string>
+    <string name="characters_list_no_more_results">There are no more results.</string>
     <string name="character_details_error">An error has occurred to load.</string>
 
     <string name="character_details_resource_uri">Resource URI</string>
     <string name="character_details_description">Description</string>
     <string name="character_details_more_info">More Info About</string>
 
-    <string name="characters_list_regular_list">Regular List</string>
-    <string name="characters_list_favorite_list">Favorite List</string>
+    <string name="characters_list_regular_list">Regular</string>
+    <string name="characters_list_favorite_list">Favorite</string>
+    <string name="characters_list_about">About</string>
+
+    <string name="info_name">Name</string>
+    <string name="info_name_value">Fabio Oliveira</string>
+    <string name="info_age">Age</string>
+    <string name="info_age_value">27</string>
+    <string name="info_email">E-mail</string>
+    <string name="info_email_value">fabio91oliveira@gmail.com</string>
+    <string name="info_phone">Phone</string>
+    <string name="info_phone_value">+55 (21) 98191–4951</string>
 </resources>
