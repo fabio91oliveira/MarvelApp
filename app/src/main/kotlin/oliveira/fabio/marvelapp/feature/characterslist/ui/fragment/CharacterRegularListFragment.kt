@@ -142,7 +142,7 @@ class CharacterRegularListFragment : Fragment(), CharactersAdapter.OnClickCharac
                                     }
                                     addResults(this)
                                     showContent()
-                                    if (charactersListViewModel.firstTime.not()) {
+                                    if (charactersListViewModel.firstTime.not() && !charactersListViewModel.isQuerySearch) {
                                         showFeedbackToUser(
                                             resources.getString(R.string.characters_list_has_been_loaded),
                                             true
