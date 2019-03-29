@@ -2,6 +2,8 @@
 
 This is an application written in Kotlin that consumes [Marvel Api](http://developer.marvel.com/).  The app **list**, **show details**, **search** and **favorite** the heroes listed.
 
+![Screen Preview](scene_1.gif)
+![Screen Preview](scene_2.gif)
 
 ## Notes
 The application includes two Activities, **CharactersList** and **Character Details** Activities. The Character Activity is consist of two Fragments, **RegularList** and **FavoriteList** Fragments and Search.
