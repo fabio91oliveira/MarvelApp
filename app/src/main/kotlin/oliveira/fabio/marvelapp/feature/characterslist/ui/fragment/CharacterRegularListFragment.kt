@@ -149,29 +149,23 @@ class CharacterRegularListFragment : Fragment(), CharactersAdapter.OnClickCharac
                                     }
                                 }
                                 else -> {
-                                    if (!charactersListViewModel.isQuerySearch) {
-                                        if (charactersListViewModel.firstTime) {
-                                            showWarningMessage(
-                                                resources.getString(R.string.characters_list_error)
-                                            ) { refreshList() }
-                                            hideContent()
-                                        } else {
-                                            showFeedbackToUser(
-                                                resources.getString(R.string.characters_list_no_results),
-                                                true
-                                            )
-                                        }
-                                    } else {
-                                        if (charactersListViewModel.offset == 0) {
-                                            hideContent()
-                                            showWarningMessage(
-                                                resources.getString(R.string.characters_list_no_results_reset)
-                                            ) { refreshList() }
-                                        } else {
-                                            showFeedbackToUser(
-                                                resources.getString(R.string.characters_list_no_results),
-                                                true
-                                            )
+                                    when (charactersListViewModel.isQuerySearch) {
+                                        true -> handleQuerySearch(
+                                            resources.getString(R.string.characters_list_no_results_reset),
+                                            resources.getString(R.string.characters_list_no_results)
+                                        )
+                                        false -> {
+                                            if (charactersListViewModel.firstTime) {
+                                                showWarningMessage(
+                                                    resources.getString(R.string.characters_list_error)
+                                                ) { refreshList() }
+                                                hideContent()
+                                            } else {
+                                                showFeedbackToUser(
+                                                    resources.getString(R.string.characters_list_no_results),
+                                                    true
+                                                )
+                                            }
                                         }
                                     }
                                 }
@@ -182,17 +176,25 @@ class CharacterRegularListFragment : Fragment(), CharactersAdapter.OnClickCharac
                         }
                     }
                     Response.StatusEnum.ERROR -> {
-                        hideLoading()
-                        if (charactersListViewModel.firstTime) {
-                            showWarningMessage(
-                                resources.getString(R.string.characters_list_error)
-                            ) { refreshList() }
-                            hideContent()
-                        } else {
-                            showFeedbackToUser(
+                        when (charactersListViewModel.isQuerySearch) {
+                            true -> handleQuerySearch(
                                 resources.getString(R.string.characters_list_error_network_error_description),
-                                false
+                                resources.getString(R.string.characters_list_error_network_error_description)
                             )
+                            false -> {
+                                hideLoading()
+                                if (charactersListViewModel.firstTime) {
+                                    showWarningMessage(
+                                        resources.getString(R.string.characters_list_error)
+                                    ) { refreshList() }
+                                    hideContent()
+                                } else {
+                                    showFeedbackToUser(
+                                        resources.getString(R.string.characters_list_error_network_error_description),
+                                        false
+                                    )
+                                }
+                            }
                         }
                     }
                 }
@@ -222,6 +224,20 @@ class CharacterRegularListFragment : Fragment(), CharactersAdapter.OnClickCharac
 
     private fun setLatestTotalResult(offset: Int) {
         charactersListViewModel.offset = offset
+    }
+
+    private fun handleQuerySearch(messageOne: String, messageTwo: String) {
+        if (charactersListViewModel.offset == 0) {
+            hideContent()
+            showWarningMessage(
+                messageOne
+            ) { refreshList() }
+        } else {
+            showFeedbackToUser(
+                messageTwo,
+                true
+            )
+        }
     }
 
     private fun addResults(character: List<Character>) = charactersAdapter.addResults(character)
